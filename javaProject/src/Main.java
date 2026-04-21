@@ -36,6 +36,7 @@ public class Main {
             System.out.println("Please choose your next action out of the preceding actions...");
 
             choice = scanner.nextInt();
+            scanner.nextLine(); // flusing buffer, probably can find a better solution...
 
             switch (choice) {
                 case 0:
@@ -44,16 +45,19 @@ public class Main {
                     System.out.println("Provide lecturer name...");
                     String newLecturer = scanner.nextLine();
                     lecturers = addElement(newLecturer, lecturers, lecSize);
+                    lecSize++;
                     break;
                 case 2:
                     System.out.println("Provide committee name...");
                     String newCommittee = scanner.nextLine();
                     comms = addElement(newCommittee, comms, commsSize);
+                    commsSize++;
                     break;
                 case 3:
                     System.out.println("Provide department name...");
                     String newDepartment = scanner.nextLine();
                     depts = addElement(newDepartment, depts, deptsSize);
+                    deptsSize++;
                     break;
                 case 4:
                     System.out.println("Provide lecturer name...");
@@ -69,10 +73,10 @@ public class Main {
                     WIP();
                     break;
                 case 7:
-                    viewElementsDetails(lecturers);
+                    viewElementsDetails(lecturers, lecSize);
                     break;
                 case 8:
-                    viewElementsDetails(comms);
+                    viewElementsDetails(comms, commsSize);
                     break;
             }
 
@@ -91,7 +95,7 @@ public class Main {
 
         if (isElemTaken) {
             System.out.println("Value is taken, please try another...");
-            return addElement(newElem, elements, elemsSize);
+            return elements;
         }
 
         elements[elemsSize] = newElem;
@@ -112,11 +116,19 @@ public class Main {
     }
 
     private static void WIP() {
-        System.out.println("Work in progress, try another option...");
+        System.out.println("Not available, try another option...");
     }
 
-    private static void viewElementsDetails(String[] elements) {
-        System.out.println(Arrays.toString(elements));
+    private static void viewElementsDetails(String[] elements, int elemSize) {
+        for (int i = 0; i < elemSize; i++) {
+            System.out.print(elements[i]);
+
+            if (i < elemSize - 1) {
+                System.out.print(", ");
+            } else {
+                System.out.print("\n");
+            }
+        }
     }
 
     private static String[] doubleArray(String[] elements) {
@@ -134,7 +146,7 @@ public class Main {
 
     private static boolean getIsElemExists(String newElem, String[] elements) {
         for (String element : elements) {
-            if (element.equals(newElem)) {
+            if (newElem.equals(element)) {
                 return true;
             }
         }
