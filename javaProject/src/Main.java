@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Main {
-    //מגישים: עידו בר, שקד גוברין
+    // מגישים: עידו בר, שקד גוברין
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -28,35 +28,55 @@ public class Main {
 
             switch (choice) {
                 case 0:
-                    System.out.println("Yallah bye");
                     break;
-
                 case 1:
                     break;
-
                 case 2:
                     break;
-
                 case 3:
                     break;
-
                 case 4:
                     break;
-
                 case 5:
-                    break;                
-
+                    break;
                 case 6:
                     break;
-                    
                 case 7:
                     break;
-                    
                 case 8:
                     break;
             }
 
-        } while (choice != 0); 
-            scanner.close();
-        } 
+        } while (choice != 0);
+        System.out.println("Yallah bye");
+        scanner.close();
+    }
+
+    private static void addLecturer() {
+
+    }
+
+    private static void addCommittee() {
+
+    }
+
+    private static void addDept() {
+
+    }
+
+    private static void assignLecturer() {
+
+    }
+
+    private static void WIP() {
+
+    }
+
+    private static void viewLecturerDetails() {
+
+    }
+
+    private static void viewDeptsDetails() {
+
+    }
 }
