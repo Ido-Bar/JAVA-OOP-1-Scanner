@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Arrays;
 
 public class Main {
     // מגישים: עידו בר, שקד גוברין
@@ -42,16 +43,24 @@ public class Main {
                 case 1:
                     System.out.println("Provide lecturer name...");
                     String newLecturer = scanner.nextLine();
-                    lecturers = addLecturer(newLecturer, lecturers, lecSize);
+                    lecturers = addElement(newLecturer, lecturers, lecSize);
                     break;
                 case 2:
-                    lecturers = addCommittee();
+                    System.out.println("Provide committee name...");
+                    String newCommittee = scanner.nextLine();
+                    comms = addElement(newCommittee, comms, commsSize);
                     break;
                 case 3:
-                    addDept();
+                    System.out.println("Provide department name...");
+                    String newDepartment = scanner.nextLine();
+                    depts = addElement(newDepartment, depts, deptsSize);
                     break;
                 case 4:
-                    assignLecturer();
+                    System.out.println("Provide lecturer name...");
+                    String addedLecturer = scanner.nextLine();
+                    System.out.println("Provide committee name...");
+                    String addedCommittee = scanner.nextLine();
+                    assignLecturer(addedLecturer, lecturers, addedCommittee, comms);
                     break;
                 case 5:
                     WIP();
@@ -60,10 +69,10 @@ public class Main {
                     WIP();
                     break;
                 case 7:
-                    viewLecturerDetails();
+                    viewElementsDetails(lecturers);
                     break;
                 case 8:
-                    viewDeptsDetails();
+                    viewElementsDetails(comms);
                     break;
             }
 
@@ -72,49 +81,64 @@ public class Main {
         scanner.close();
     }
 
-    private static String[] addLecturer(String newLecturer, String[] lecturers, int lecSize) {
-        if (lecSize == lecturers.length) {
-            lecturers = doubleArray(lecturers);
+    private static String[] addElement(String newElem, String[] elements, int elemsSize) {
+        boolean isOverSize = elemsSize == elements.length;
+        boolean isElemTaken = getIsElemExists(newElem, elements);
+
+        if (isOverSize) {
+            elements = doubleArray(elements);
         }
 
-        lecturers[lecSize] = newLecturer;
-        return lecturers;
+        if (isElemTaken) {
+            System.out.println("Value is taken, please try another...");
+            return addElement(newElem, elements, elemsSize);
+        }
+
+        elements[elemsSize] = newElem;
+        return elements;
     }
 
-    private static String[] addCommittee() {
+    private static void assignLecturer(String lecturer, String[] lecturers, String committee, String[] comms) {
+        boolean isLecturerExists = getIsElemExists(lecturer, lecturers);
+        boolean isCommExists = getIsElemExists(committee, comms);
 
-    }
+        if (!isLecturerExists) {
+            System.out.println("Lecturer was not found!");
+        }
 
-    private static String[] addDept() {
-
-    }
-
-    private static void assignLecturer() {
-
+        if (!isCommExists) {
+            System.out.println("Committee was not found!");
+        }
     }
 
     private static void WIP() {
-
+        System.out.println("Work in progress, try another option...");
     }
 
-    private static void viewLecturerDetails() {
-
+    private static void viewElementsDetails(String[] elements) {
+        System.out.println(Arrays.toString(elements));
     }
 
-    private static void viewDeptsDetails() {
+    private static String[] doubleArray(String[] elements) {
+        int elemsExtFactor = 2;
+        int elemsSize = elements.length;
 
-    }
+        String[] newElems = new String[elemsExtFactor * elemsSize];
 
-    private static String[] doubleArray(String[] arr) {
-        int arrExtFactor = 2;
-        int arrSize = arr.length;
-
-        String[] newArr = new String[arrExtFactor * arrSize];
-
-        for (int i = 0; i < arrSize; i++) {
-            newArr[i] = arr[i];
+        for (int i = 0; i < elemsSize; i++) {
+            newElems[i] = elements[i];
         }
 
-        return newArr;
+        return newElems;
+    }
+
+    private static boolean getIsElemExists(String newElem, String[] elements) {
+        for (String element : elements) {
+            if (element.equals(newElem)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
