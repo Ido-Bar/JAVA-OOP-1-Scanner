@@ -1,18 +1,3 @@
-## Getting Started
-
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
-
-## Folder Structure
-
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+known issues:
+1. if user tries to write a taken value, we will send him back to the menu, this will cause an empty entry (null) to be added as an element to the list, causing nullPointerExceptions when reiterating over the list for listing the values in cases 7-8 and for isExists checks
+2. is existsChecks iterate over all elements including nulls, maybe we can run over the size of the known elements instead the size of the initialized array

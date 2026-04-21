@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.util.Arrays;
 
 public class Main {
     // מגישים: עידו בר, שקד גוברין
@@ -22,7 +21,6 @@ public class Main {
         System.out.println("Your college is: " + college);
 
         do {
-
             System.out.println("--- ACADEMIC STAFF MANAGEMENT SYSTEM ---");
             System.out.println("0: Exit.");
             System.out.println("1: Add Lecturer.");
