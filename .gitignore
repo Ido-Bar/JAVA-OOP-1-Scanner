@@ -1,0 +1,12 @@
+# Ignore the JDK folder we discussed
+jdk*/
+
+# Ignore compiled Java classes
+*.class
+
+# Ignore IDE settings (IntelliJ/Eclipse)
+.idea/
+*.iml
+.project
+.classpath
+.settings/
