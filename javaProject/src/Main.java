@@ -116,6 +116,11 @@ public class Main {
     }
 
     private static void viewElementsDetails(String[] elements, int elemSize) {
+        if (elemSize == 0) {
+            System.out.println("No details available right now!");
+            return;
+        }
+
         for (int i = 0; i < elemSize; i++) {
             System.out.print(elements[i]);
 
