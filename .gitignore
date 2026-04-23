@@ -1,4 +1,4 @@
-# Ignore the JDK folder we discussed
+# Ignore the JDK folder
 jdk*/
 
 # Ignore compiled Java classes
