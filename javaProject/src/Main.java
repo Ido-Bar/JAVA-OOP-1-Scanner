@@ -42,26 +42,48 @@ public class Main {
                 case 1:
                     System.out.println("Provide lecturer name...");
                     String newLecturer = scanner.nextLine();
-                    lecturers = addElement(newLecturer, lecturers, lecSize);
-                    lecSize++;
+                    boolean isLecturerTaken = getIsElemExists(newLecturer, lecturers);
+
+                    if (!isLecturerTaken) {
+                        lecturers = addElement(newLecturer, lecturers, lecSize);
+                        lecSize++;
+                        break;
+                    }
+
+                    System.out.println("Value is taken, please try another...");
                     break;
                 case 2:
                     System.out.println("Provide committee name...");
                     String newCommittee = scanner.nextLine();
-                    comms = addElement(newCommittee, comms, commsSize);
-                    commsSize++;
+                    boolean isCommTaken = getIsElemExists(newCommittee, comms);
+
+                    if (!isCommTaken) {
+                        comms = addElement(newCommittee, comms, commsSize);
+                        commsSize++;
+                        break;
+                    }
+
+                    System.out.println("Value is taken, please try another...");
                     break;
                 case 3:
                     System.out.println("Provide department name...");
                     String newDepartment = scanner.nextLine();
-                    depts = addElement(newDepartment, depts, deptsSize);
-                    deptsSize++;
+                    boolean isDeptTaken = getIsElemExists(newDepartment, depts);
+
+                    if (!isDeptTaken) {
+                        depts = addElement(newDepartment, depts, deptsSize);
+                        deptsSize++;
+                        break;
+                    }
+
+                    System.out.println("Value is taken, please try another...");
                     break;
                 case 4:
                     System.out.println("Provide lecturer name...");
                     String addedLecturer = scanner.nextLine();
                     System.out.println("Provide committee name...");
                     String addedCommittee = scanner.nextLine();
+
                     assignLecturer(addedLecturer, lecturers, addedCommittee, comms);
                     break;
                 case 5:
@@ -85,18 +107,13 @@ public class Main {
 
     private static String[] addElement(String newElem, String[] elements, int elemsSize) {
         boolean isOverSize = elemsSize == elements.length;
-        boolean isElemTaken = getIsElemExists(newElem, elements);
 
         if (isOverSize) {
             elements = doubleArray(elements);
         }
 
-        if (isElemTaken) {
-            System.out.println("Value is taken, please try another...");
-            return elements;
-        }
-
         elements[elemsSize] = newElem;
+        System.out.println("Added value: " + newElem);
         return elements;
     }
 
