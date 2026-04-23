@@ -34,56 +34,37 @@ public class Main {
             System.out.println("Please choose your next action out of the preceding actions...");
 
             choice = scanner.nextInt();
-            scanner.nextLine(); // flusing buffer, probably can find a better solution...
+            scanner.nextLine(); // flusing buffer, can probably find a better solution...
 
             switch (choice) {
                 case 0:
                     break;
                 case 1:
-                    System.out.println("Provide lecturer name...");
-                    String newLecturer = scanner.nextLine();
-                    boolean isLecturerTaken = getIsElemExists(newLecturer, lecturers);
-
-                    if (!isLecturerTaken) {
-                        lecturers = addElement(newLecturer, lecturers, lecSize);
+                    String lecturer = getValidInput("lecturer", lecturers, lecSize, scanner);
+                    if (lecturer != null) {
+                        lecturers = addElement(lecturer, lecturers, lecSize);
                         lecSize++;
-                        break;
                     }
-
-                    System.out.println("Value is taken, please try another...");
                     break;
                 case 2:
-                    System.out.println("Provide committee name...");
-                    String newCommittee = scanner.nextLine();
-                    boolean isCommTaken = getIsElemExists(newCommittee, comms);
-
-                    if (!isCommTaken) {
-                        comms = addElement(newCommittee, comms, commsSize);
+                    String committee = getValidInput("committee", lecturers, lecSize, scanner);
+                    if (committee != null) {
+                        lecturers = addElement(committee, comms, commsSize);
                         commsSize++;
-                        break;
                     }
-
-                    System.out.println("Value is taken, please try another...");
                     break;
                 case 3:
-                    System.out.println("Provide department name...");
-                    String newDepartment = scanner.nextLine();
-                    boolean isDeptTaken = getIsElemExists(newDepartment, depts);
-
-                    if (!isDeptTaken) {
-                        depts = addElement(newDepartment, depts, deptsSize);
-                        deptsSize++;
-                        break;
+                    String department = getValidInput("department", depts, deptsSize, scanner);
+                    if (department != null) {
+                        lecturers = addElement(department, depts, deptsSize);
+                        lecSize++;
                     }
-
-                    System.out.println("Value is taken, please try another...");
                     break;
                 case 4:
                     System.out.println("Provide lecturer name...");
                     String addedLecturer = scanner.nextLine();
                     System.out.println("Provide committee name...");
                     String addedCommittee = scanner.nextLine();
-
                     assignLecturer(addedLecturer, lecturers, addedCommittee, comms);
                     break;
                 case 5:
@@ -167,5 +148,23 @@ public class Main {
         }
 
         return false;
+    }
+
+    private static String getValidInput(String inputType, String[] elems, int size, Scanner sc) {
+        while (true) {
+            System.out.println("Provide " + inputType + "name ( or 0 to cancel )");
+            String input = sc.nextLine();
+            boolean isNameExists = getIsElemExists(input, elems);
+
+            if (input.equals("0")) {
+                return null;
+            }
+
+            if (!isNameExists) {
+                return input;
+            }
+
+            System.out.println(inputType + ": '" + input + "'' already exists! Please choose another...");
+        }
     }
 }
