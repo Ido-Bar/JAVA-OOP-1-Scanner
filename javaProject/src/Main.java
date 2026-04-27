@@ -16,22 +16,23 @@ public class Main {
         int commsSize = 0;
         int deptsSize = 0;
 
-        System.out.println("Name you college...");
+        System.out.print("Name of college: ");
         String college = scanner.nextLine();
-        System.out.println("Your college is: " + college);
+        clearScreen();
+//        System.out.println("Your college is: " + college);
 
         do {
-            System.out.println("--- ACADEMIC STAFF MANAGEMENT SYSTEM ---");
+            System.out.println("--- " + college.toUpperCase() + " ACADEMIC STAFF MANAGEMENT SYSTEM ---");
             System.out.println("0: Exit.");
             System.out.println("1: Add Lecturer.");
             System.out.println("2: Add Committee.");
             System.out.println("3: Add Department.");
-            System.out.println("4: Assign Lecturer To a Department.");
+            System.out.println("4: Assign Lecturer To a Committee.");
             System.out.println("5: View Average Salary of All Lecturers In College.");
             System.out.println("6: View Average Salary of All Lecturers In Chosen Deptartments.");
-            System.out.println("7: View All Lecturers' Details.");
-            System.out.println("8: View All Departmentrs Details.");
-            System.out.println("Please choose your next action out of the preceding actions...");
+            System.out.println("7: View All Lecturers Details.");
+            System.out.println("8: View All Committees Details.");
+            System.out.print("Please choose your next action out of the preceding actions: ");
 
             choice = scanner.nextInt();
             scanner.nextLine(); // flusing buffer, can probably find a better solution...
@@ -45,41 +46,51 @@ public class Main {
                         lecturers = addElement(lecturer, lecturers, lecSize);
                         lecSize++;
                     }
+                    clearScreen(true);
                     break;
                 case 2:
-                    String committee = getValidInput("committee", lecturers, lecSize, scanner);
+                    String committee = getValidInput("committee", comms, commsSize, scanner);
                     if (committee != null) {
-                        lecturers = addElement(committee, comms, commsSize);
+                        comms = addElement(committee, comms, commsSize);
                         commsSize++;
                     }
+                    clearScreen(true);
                     break;
                 case 3:
                     String department = getValidInput("department", depts, deptsSize, scanner);
                     if (department != null) {
-                        lecturers = addElement(department, depts, deptsSize);
-                        lecSize++;
+                        depts = addElement(department, depts, deptsSize);
+                        deptsSize++;
                     }
+                    clearScreen();
                     break;
                 case 4:
-                    System.out.println("Provide lecturer name...");
+                    System.out.print("Provide lecturer name: ");
                     String addedLecturer = scanner.nextLine();
-                    System.out.println("Provide committee name...");
+                    System.out.print("Provide committee name: ");
                     String addedCommittee = scanner.nextLine();
                     assignLecturer(addedLecturer, lecturers, addedCommittee, comms);
+
+                    clearScreen();
                     break;
-                case 5:
-                    WIP();
-                    break;
-                case 6:
+                case 5, 6:
                     WIP();
                     break;
                 case 7:
-                    viewElementsDetails(lecturers, lecSize);
+                    clearScreen(); // Clear Before display data
+                    viewElementsDetails(lecturers, lecSize, "Lecturers");
                     break;
                 case 8:
-                    viewElementsDetails(comms, commsSize);
+                    clearScreen();
+                    viewElementsDetails(comms, commsSize, "Committees");
                     break;
             }
+
+//            try {
+//                Thread.sleep(1000); // Sleep 2 sec
+//            } catch (InterruptedException e) {
+//                Thread.currentThread().interrupt();
+//            }
 
         } while (choice != 0);
         System.out.println("Yallah bye");
@@ -94,6 +105,8 @@ public class Main {
         }
 
         elements[elemsSize] = newElem;
+
+        System.out.println();
         System.out.println("Added value: " + newElem);
         return elements;
     }
@@ -115,21 +128,24 @@ public class Main {
         System.out.println("Not available, try another option...");
     }
 
-    private static void viewElementsDetails(String[] elements, int elemSize) {
+    private static void viewElementsDetails(String[] elements, int elemSize, String... elemName) {
+        String name = (elemName.length > 0) ? elemName[0] : "Elements";
         if (elemSize == 0) {
-            System.out.println("No details available right now!");
+            System.out.println("No " + name + " available right now!");
             return;
         }
 
+        System.out.print(name + ": ");
         for (int i = 0; i < elemSize; i++) {
             System.out.print(elements[i]);
 
             if (i < elemSize - 1) {
                 System.out.print(", ");
             } else {
-                System.out.print("\n");
+                System.out.println();
             }
         }
+        System.out.println();
     }
 
     private static String[] doubleArray(String[] elements) {
@@ -157,7 +173,7 @@ public class Main {
 
     private static String getValidInput(String inputType, String[] elems, int size, Scanner sc) {
         while (true) {
-            System.out.println("Provide " + inputType + "name ( or 0 to cancel )");
+            System.out.print("Provide " + inputType + " name (0 = cancel): ");
             String input = sc.nextLine();
             boolean isNameExists = getIsElemExists(input, elems);
 
@@ -169,7 +185,25 @@ public class Main {
                 return input;
             }
 
-            System.out.println(inputType + ": '" + input + "'' already exists! Please choose another...");
+            System.out.println();
+            System.out.println(inputType + ": '" + input + "' already exists! Please choose another...");
         }
+    }
+
+    // Clears terminal - (Pretty sure if only for linux tho \m/)
+    private static void clearScreen(boolean wait){ // Wait is true, For feedback like "Added blabla"
+        if (wait) {
+            try {
+                Thread.sleep(1000); // Sleep 1 sec
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        clearScreen();
+    }
+    private static void clearScreen(){ // To clear screen before display data
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 }
