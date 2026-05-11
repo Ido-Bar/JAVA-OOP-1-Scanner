@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Main {
-    // מגישים: עידו בר, שקד גוברין
+    // מגישים: עידו בר - (TODO: ADD YOURS IDO), שקד גוברין - 322920190
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
