@@ -1,16 +1,16 @@
 import java.util.Scanner;
 
 public class Main {
-    // מגישים: עידו בר - (TODO: ADD YOURS IDO), שקד גוברין - 322920190
+    // מגישים: עידו בר - 211541149, שקד גוברין - 322920190
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         int choice;
 
-        String[] lecturers = new String[2];
-        String[] depts = new String[2];
-        String[] comms = new String[2];
+        Lecturer[] lecturers = new Lecturer[2];
+        Department[] depts = new Department[2];
+        Committee[] comms = new Committee[2];
 
         int lecSize = 0;
         int commsSize = 0;
