@@ -1,0 +1,54 @@
+public class Lecturer {
+    public enum Degree {
+        BSC,
+        MSC,
+        DR,
+        PROF
+    }
+    private String name;
+    private String id;
+    private Degree degreeRank;
+    private String degreeName;
+    private double salary;
+    private Department department;
+    private int commsSize;
+
+    public Lecturer(String name, String id, Degree degreeRank, String degreeName, double salary) {
+        this.name = name;
+        this.id = id;
+        this.degreeRank = degreeRank;
+        this.degreeName = degreeName;
+        this.salary = salary;
+        this.commsSize = 0;
+    }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public Degree getDegreeRank() { return degreeRank; }
+    public void setDegreeRank(Degree degreeRank) { this.degreeRank = degreeRank; }
+
+    public String getDegreeName() { return degreeName; }
+    public void setDegreeName(String degreeName) { this.degreeName = degreeName; }
+
+    public double getSalary() { return salary; }
+    public void setSalary(double salary) { this.salary = salary; }
+
+    public Department getDepartment() { return department; }
+    public void setDepartment(Department department) { this.department = department; }
+
+    @Override
+    public String toString() {
+        return "Lecturer{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", degreeRank=" + degreeRank +
+                ", degreeName='" + degreeName + '\'' +
+                ", salary=" + salary +
+                ", department=" + department +
+                '}';
+    }
+}

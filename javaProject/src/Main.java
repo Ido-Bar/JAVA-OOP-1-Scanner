@@ -1,8 +1,6 @@
 import java.util.Scanner;
 
 public class Main {
-    // מגישים: עידו בר - (TODO: ADD YOURS IDO), שקד גוברין - 322920190
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -18,7 +16,7 @@ public class Main {
 
         System.out.print("Name of college: ");
         String college = scanner.nextLine();
-//        clearScreen();
+//        System.out.println("Your college is: " + college);
 //        System.out.println("Your college is: " + college);
 
         do {
@@ -46,7 +44,6 @@ public class Main {
                         lecturers = addElement(lecturer, lecturers, lecSize);
                         lecSize++;
                     }
-//                    clearScreen(true);
                     break;
                 case 2:
                     String committee = getValidInput("committee", comms, commsSize, scanner);
@@ -54,7 +51,6 @@ public class Main {
                         comms = addElement(committee, comms, commsSize);
                         commsSize++;
                     }
-//                    clearScreen(true);
                     break;
                 case 3:
                     String department = getValidInput("department", depts, deptsSize, scanner);
@@ -62,7 +58,6 @@ public class Main {
                         depts = addElement(department, depts, deptsSize);
                         deptsSize++;
                     }
-//                    clearScreen();
                     break;
                 case 4:
                     System.out.print("Provide lecturer name: ");
@@ -71,17 +66,14 @@ public class Main {
                     String addedCommittee = scanner.nextLine();
                     assignLecturer(addedLecturer, lecturers, addedCommittee, comms);
 
-//                    clearScreen();
                     break;
                 case 5, 6:
                     WIP();
                     break;
                 case 7:
-//                    clearScreen(); // Clear Before display data
                     viewElementsDetails(lecturers, lecSize, "Lecturers");
                     break;
                 case 8:
-//                    clearScreen();
                     viewElementsDetails(comms, commsSize, "Committees");
                     break;
             }
@@ -182,21 +174,4 @@ public class Main {
             System.out.println(inputType + ": '" + input + "' already exists! Please choose another...");
         }
     }
-
-    // Clears terminal - (Pretty sure it's only for linux tho \m/)
-//    private static void clearScreen(boolean wait){ // Wait is true, For feedback like "Added blabla"
-//        if (wait) {
-//            try {
-//                Thread.sleep(1000); // Sleep 1 sec
-//            } catch (InterruptedException e) {
-//                Thread.currentThread().interrupt();
-//            }
-//        }
-//
-//        clearScreen();
-//    }
-//    private static void clearScreen(){ // To clear screen before display data
-//        System.out.print("\033[H\033[2J");
-//        System.out.flush();
-//    }
 }
