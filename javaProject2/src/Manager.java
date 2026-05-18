@@ -1,4 +1,3 @@
-import java.util.Scanner;
 
 public class Manager {
     private String name;
@@ -19,41 +18,79 @@ public class Manager {
         this.commsSize = 0;
     }
 
+
     public String getCollegeName() {
         return name;
     }
 
-    public void addLecturer(String name, String id, Lecturer.Degree degreeRank, String degreeName, double salary){
-        Lecturer newLec = new Lecturer(name, id, degreeRank, degreeName, salary);
-
-        boolean isOverSize = lecSize == lecturers.length;
-        if (isOverSize) { doubleLecturers(); }
-
-        lecturers[lecSize] = newLec;
-        lecSize++;
+    
+    public void addDepartment(String name, int numOfStudents) {
+        Department dep = new Department(name, numOfStudents);
+        
+        boolean isOverSize = deptsSize == depts.length;
+        if (!isOverSize) { doubleDepts(); }
+        
+        depts[deptsSize] = dep;
+        deptsSize++;
     }
+    
+    // public void addCommittee(String cName) {
+        //     Committee comm = new Committee(cName);
+        
+        // }
+        
+        public void addLecturer(String name, String id, Lecturer.Degree degreeRank, String degreeName, double salary){
+            Lecturer newLec = new Lecturer(name, id, degreeRank, degreeName, salary);
+            
+            boolean isOverSize = lecSize == lecturers.length;
+            if (isOverSize) { doubleLecturers(); }
 
-    private void doubleLecturers() {
-        int elemsExtFactor = 2;
-        int elemsSize = lecturers.length;
-
-        Lecturer[] newElems = new Lecturer[elemsExtFactor * elemsSize];
-
-        for (int i = 0; i < elemsSize; i++) {
-            newElems[i] = lecturers[i];
+            lecturers[lecSize] = newLec;
+            lecSize++;
         }
-        lecturers = newElems;
-    }
-
-    public Lecturer[] getLecturers() {
-        // Create a new array exactly the size of the active elements
-        Lecturer[] activeLecturers = new Lecturer[lecSize];
-
-        // Copy only the valid lecturers over
-        for (int i = 0; i < lecSize; i++) {
-            activeLecturers[i] = lecturers[i];
+        
+        private void doubleLecturers() {
+            int elemsExtFactor = 2;
+            int elemsSize = lecturers.length;
+            
+            Lecturer[] newElems = new Lecturer[elemsExtFactor * elemsSize];
+            
+            for (int i = 0; i < elemsSize; i++) {
+                newElems[i] = lecturers[i];
+            }
+            lecturers = newElems;
+        }
+        
+        private void doubleDepts() {
+            int elemsExtFactor = 2;
+            int elemsSize = depts.length;
+            
+            Department[] newElems = new Department[elemsExtFactor * elemsSize];
+            
+            for (int i = 0; i < elemsSize; i++) {
+                newElems[i] = depts[i];
+            }
+            depts = newElems;
+        }
+        
+        public Lecturer[] getLecturers() {
+            Lecturer[] activeLecturers = new Lecturer[lecSize];
+            
+            for (int i = 0; i < lecSize; i++) {
+                activeLecturers[i] = lecturers[i];
+            }
+            
+            return activeLecturers;
         }
 
-        return activeLecturers;
+        public Department[] getDepartments() {
+            Department[] activeDepartments = new Department[deptsSize];
+
+            for (int i = 0; i < lecSize; i++) {
+                activeDepartments[i] = depts[i];
+            }
+
+            return activeDepartments;
+        }
     }
-}
+    

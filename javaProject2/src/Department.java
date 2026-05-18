@@ -4,8 +4,6 @@ public class Department {
     private Lecturer[] lecturers;
     private int numLecturers;
 
-    public Department(){}
-
     public Department(String name, int numStudents) {
         this.name = name;
         this.numStudents = numStudents;
