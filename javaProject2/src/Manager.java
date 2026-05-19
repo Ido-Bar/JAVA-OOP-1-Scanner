@@ -16,12 +16,10 @@ public class Manager {
         this.comms = new Committee[2];
     }
 
-
     public String getCollegeName() {
         return name;
     }
 
-    
     public void addDepartment(String name, int numOfStudents) {
         Department dep = new Department(name, numOfStudents);
 
@@ -75,12 +73,17 @@ public class Manager {
 
         return activeLecturers;
     }
+
     public Department[] getDepartments() {
         Department[] activeDepartments = new Department[deptsSize];
         for (int i = 0; i < deptsSize; i++) {
             activeDepartments[i] = depts[i];
         }
         return activeDepartments;
+    }
+
+    public void setLecturerToDepartment(Lecturer[] lec, Department[] dept) {
+
     }
 }
     

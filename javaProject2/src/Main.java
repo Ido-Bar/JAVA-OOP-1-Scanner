@@ -80,20 +80,46 @@ public class Main {
         System.out.println(depts.length);
 
         System.out.println("Provide Department's Name...");
-        //System.out.println("Provide Department's Name...");
         name = scanner.nextLine();
-        boolean isDepExists = getIsDepExists(name, depts);
+        boolean isDepExists = getIsDeptExists(name, depts);
 
         while (isDepExists) {
             System.out.print("Department Exists, Provide a Valid Department Name...");
             name = scanner.nextLine();
-            isDepExists = getIsDepExists(name, depts);
+            isDepExists = getIsDeptExists(name, depts);
         }
 
         System.out.print("Provide Number Of Students In Department...");
         numOfStudents = scanner.nextInt();
 
         man.addDepartment(name, numOfStudents);
+    }
+
+    private static void addLecturerToDepartmentMenu(Manager man, Scanner scanner) {
+        Lecturer[] lecs = man.getLecturers();
+        Department[] depts = man.getDepartments();
+
+        System.out.println("Provide Lecturer name: ");
+        String lecName = scanner.nextLine();
+        boolean isLecNameExists = getIsLecturerExists(lecName, lecs);
+
+        while(!isLecNameExists) {
+            System.out.println("Lecturer Not Found, Please Provide a Valid Lecturer Name");
+            lecName = scanner.nextLine();
+            isLecNameExists = getIsLecturerExists(lecName, lecs);
+        }
+
+        System.out.println("Provide Department Name: ");
+        String deptName = scanner.nextLine();
+        boolean isDeptNameExists = getIsDeptExists(deptName, depts);
+
+        while(!isDeptNameExists) {
+            System.out.println("Department Not Found, Please Provide a Valid Department Name");
+            deptName = scanner.nextLine();
+            isDeptNameExists = getIsLecturerExists(deptName, lecs);
+        }
+
+
     }
 
     private static void addLecturerMenu(Manager man, Scanner scanner){
@@ -106,12 +132,12 @@ public class Main {
         Lecturer[] lecs = man.getLecturers();
         System.out.print("Provide Lecturer name: ");
         name = scanner.nextLine();
-        boolean nameExist = lecExist(name, lecs);
+        boolean nameExist = getIsLecturerExists(name, lecs);
 
         while (nameExist){
             System.out.print("Lecturer Exists, Provide a Lecturer name: ");
             name = scanner.nextLine();
-            nameExist = lecExist(name, lecs);
+            nameExist = getIsLecturerExists(name, lecs);
         }
 
         System.out.print("Provide Lecturer ID (Teudat Zehut): ");
@@ -144,19 +170,19 @@ public class Main {
         man.addLecturer(name, id, degreeRank, degreeName, salary);
     }
 
-    private static boolean lecExist(String name,Lecturer[] lecs) {
-        boolean nameExist = false;
+    private static boolean getIsLecturerExists(String name, Lecturer[] lecs) {
+        boolean isNameExists = false;
 
         for (int i = 0; i < lecs.length; i++) {
             if (lecs[i].getName().equals(name)){
-                nameExist = true;
+                isNameExists = true;
             }
         }
 
-        return nameExist;
+        return isNameExists;
     }
 
-    private static boolean getIsDepExists(String name, Department[] depts) {
+    private static boolean getIsDeptExists(String name, Department[] depts) {
         boolean isNameExists = false;
 
         for (int i = 0; i < depts.length; i++ ) {
