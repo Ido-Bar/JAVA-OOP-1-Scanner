@@ -1,4 +1,3 @@
-import java.util.Scanner;
 
 public class Manager {
     private String name;
@@ -14,13 +13,23 @@ public class Manager {
         this.name = name;
         this.lecturers = new Lecturer[2];
         this.depts = new Department[2];
-        this.deptsSize = 0;
         this.comms = new Committee[2];
-        this.commsSize = 0;
     }
+
 
     public String getCollegeName() {
         return name;
+    }
+
+    
+    public void addDepartment(String name, int numOfStudents) {
+        Department dep = new Department(name, numOfStudents);
+
+        boolean isOverSize = deptsSize == depts.length;
+        if (!isOverSize) { doubleDepts(); }
+
+        depts[deptsSize] = dep;
+        deptsSize++;
     }
 
     public void addLecturer(String name, String id, Lecturer.Degree degreeRank, String degreeName, double salary){
@@ -45,15 +54,33 @@ public class Manager {
         lecturers = newElems;
     }
 
+    private void doubleDepts() {
+        int elemsExtFactor = 2;
+        int elemsSize = depts.length;
+
+        Department[] newElems = new Department[elemsExtFactor * elemsSize];
+
+        for (int i = 0; i < elemsSize; i++) {
+            newElems[i] = depts[i];
+        }
+        depts = newElems;
+    }
+
     public Lecturer[] getLecturers() {
-        // Create a new array exactly the size of the active elements
         Lecturer[] activeLecturers = new Lecturer[lecSize];
 
-        // Copy only the valid lecturers over
         for (int i = 0; i < lecSize; i++) {
             activeLecturers[i] = lecturers[i];
         }
 
         return activeLecturers;
     }
+    public Department[] getDepartments() {
+        Department[] activeDepartments = new Department[deptsSize];
+        for (int i = 0; i < deptsSize; i++) {
+            activeDepartments[i] = depts[i];
+        }
+        return activeDepartments;
+    }
 }
+    
