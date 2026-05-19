@@ -181,7 +181,7 @@ public class Main {
             chairman = man.getLecturerByName(chairmanName);
         }
 
-        boolean isDegreeOk = chairman.getDegreeRank().ordinal() >= Lecturer.Degree.DR.ordinal()
+        boolean isDegreeOk = chairman.getDegreeRank().ordinal() >= Lecturer.Degree.DR.ordinal();
         while (!isDegreeOk) {
             System.out.print("Chairman must be at least DR. Provide a different Chairman name: ");
             chairmanName = scanner.nextLine();
@@ -193,10 +193,8 @@ public class Main {
                 chairmanName = scanner.nextLine();
                 chairman = man.getLecturerByName(chairmanName);
             }
+            isDegreeOk = chairman.getDegreeRank().ordinal() >= Lecturer.Degree.DR.ordinal();
         }
-        
-        Committee[] updatedComms = man.getCommittees();
-        Committee newComm = updatedComms[updatedComms.length - 1];
 
         man.addCommittee(name, chairman);
 
