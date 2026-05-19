@@ -181,7 +181,8 @@ public class Main {
             chairman = man.getLecturerByName(chairmanName);
         }
 
-        while (chairman.getDegreeRank().ordinal() < Lecturer.Degree.DR.ordinal()) {
+        boolean isDegreeOk = chairman.getDegreeRank().ordinal() >= Lecturer.Degree.DR.ordinal()
+        while (isDegreeOk) {
             System.out.print("Chairman must be at least DR. Provide a different Chairman name: ");
             chairmanName = scanner.nextLine();
             chairman = man.getLecturerByName(chairmanName);
