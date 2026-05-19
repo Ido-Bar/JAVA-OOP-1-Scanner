@@ -39,9 +39,9 @@ public class Main {
                         System.out.println(l.toString());
                     }
                     break;
-            //    case 2:
-            //         Manager.addCommittee();
-            //         break;
+                case 2:
+                    addCommitteeMenu(man, scanner);
+                    break;
                case 3:
                    addDepartmentMenu(man, scanner);
                    Department[] depts = man.getDepartments();
@@ -182,6 +182,60 @@ public class Main {
         return isNameExists;
     }
 
+    private static void addCommitteeMenu(Manager man, Scanner scanner) {
+        String name;
+        String chairmanName;
+
+        System.out.print("Provide Committee Name: ");
+        name = scanner.nextLine();
+        Committee[] comms = man.getCommittees();
+
+        boolean nameExist = commExist(name, comms);
+        while (nameExist) {
+            System.out.print("Committee Exists, Provide a new Committee name: ");
+            name = scanner.nextLine();
+            nameExist = commExist(name, comms);
+        }
+
+        System.out.print("Provide Lecturer Chairman name: ");
+        chairmanName = scanner.nextLine();
+
+        Lecturer chairman = man.getLecturerByName(chairmanName);
+        while (chairman == null) {
+            System.out.print("Lecturer Doesn't Exist, Provide a valid Lecturer name: ");
+            chairmanName = scanner.nextLine();
+            chairman = man.getLecturerByName(chairmanName);
+        }
+
+        boolean isDegreeOk = chairman.getDegreeRank().ordinal() >= Lecturer.Degree.DR.ordinal();
+        while (!isDegreeOk) {
+            System.out.print("Chairman must be at least DR. Provide a different Chairman name: ");
+            chairmanName = scanner.nextLine();
+            chairman = man.getLecturerByName(chairmanName);
+
+            // Check Lecturer exist
+            while (chairman == null) {
+                System.out.print("Lecturer Doesn't Exist, Provide a valid Lecturer name: ");
+                chairmanName = scanner.nextLine();
+                chairman = man.getLecturerByName(chairmanName);
+            }
+            isDegreeOk = chairman.getDegreeRank().ordinal() >= Lecturer.Degree.DR.ordinal();
+        }
+
+        man.addCommittee(name, chairman);
+
+        System.out.println("Committee '" + name + "' added successfully with Chairman " + chairman.getName() + "!");
+    }
+
+    private static boolean commExist(String name,Committee[] comms) {
+        boolean nameExist = false;
+        for (int i = 0; i < comms.length; i++) {
+            if (comms[i].getName().equals(name)){
+                nameExist = true;
+            }
+        }
+        return nameExist;
+    }
     private static boolean getIsDeptExists(String name, Department[] depts) {
         boolean isNameExists = false;
 
@@ -193,97 +247,4 @@ public class Main {
 
         return isNameExists;
     }
-
-//    private static String[] addElement(String newElem, String[] elements, int elemsSize) {
-//        boolean isOverSize = elemsSize == elements.length;
-//
-//        if (isOverSize) {
-//            elements = doubleArray(elements);
-//        }
-//
-//        elements[elemsSize] = newElem;
-//
-//        System.out.println();
-//        System.out.println("Added value: " + newElem);
-//        return elements;
-//    }
-//
-//    private static void assignLecturer(String lecturer, String[] lecturers, String committee, String[] comms) {
-//        boolean isLecturerExists = getIsElemExists(lecturer, lecturers);
-//        boolean isCommExists = getIsElemExists(committee, comms);
-//
-//        if (!isLecturerExists) {
-//            System.out.println("Lecturer was not found!");
-//        }
-//
-//        if (!isCommExists) {
-//            System.out.println("Committee was not found!");
-//        }
-//    }
-//
-//    private static void WIP() {
-//        System.out.println("Not available, try another option...");
-//    }
-//
-//    private static void viewElementsDetails(String[] elements, int elemSize, String... elemName) {
-//        String name = (elemName.length > 0) ? elemName[0] : "Elements";
-//        if (elemSize == 0) {
-//            System.out.println("No " + name + " available right now!");
-//            return;
-//        }
-//
-//        System.out.print(name + ": ");
-//        for (int i = 0; i < elemSize; i++) {
-//            System.out.print(elements[i]);
-//
-//            if (i < elemSize - 1) {
-//                System.out.print(", ");
-//            } else {
-//                System.out.println();
-//            }
-//        }
-//        System.out.println();
-//    }
-//
-//    private static String[] doubleArray(String[] elements) {
-//        int elemsExtFactor = 2;
-//        int elemsSize = elements.length;
-//
-//        String[] newElems = new String[elemsExtFactor * elemsSize];
-//
-//        for (int i = 0; i < elemsSize; i++) {
-//            newElems[i] = elements[i];
-//        }
-//
-//        return newElems;
-//    }
-//
-//    private static boolean getIsElemExists(String newElem, String[] elements) {
-//        for (String element : elements) {
-//            if (newElem.equals(element)) {
-//                return true;
-//            }
-//        }
-//
-//        return false;
-//    }
-//
-//    private static String getValidInput(String inputType, String[] elems, int size, Scanner sc) {
-//        while (true) {
-//            System.out.print("Provide " + inputType + " name (0 = cancel): ");
-//            String input = sc.nextLine();
-//            boolean isNameExists = getIsElemExists(input, elems);
-//
-//            if (input.equals("0")) {
-//                return null;
-//            }
-//
-//            if (!isNameExists) {
-//                return input;
-//            }
-//
-//            System.out.println();
-//            System.out.println(inputType + ": '" + input + "' already exists! Please choose another...");
-//        }
-//    }
 }
