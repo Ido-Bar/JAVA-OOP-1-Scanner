@@ -1,7 +1,11 @@
 import java.util.Scanner;
 
 public class Main {
+<<<<<<< HEAD
+=======
     // מגישים: עידו בר - 211541149, שקד גוברין - 322920190
+
+>>>>>>> 1336cb7a256bea9d699a2bd773cc3e64ed904a07
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -17,6 +21,7 @@ public class Main {
 
         System.out.print("Name of college: ");
         String college = scanner.nextLine();
+//        System.out.println("Your college is: " + college);
 //        System.out.println("Your college is: " + college);
 
         do {

@@ -1,15 +1,14 @@
 import java.util.Scanner;
 
 public class Main {
-    // מגישים: עידו בר - 211541149, שקד גוברין - 322920190
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         int choice;
 
-        Lecturer[] lecturers = new Lecturer[2];
-        Department[] depts = new Department[2];
-        Committee[] comms = new Committee[2];
+        String[] lecturers = new String[2];
+        String[] depts = new String[2];
+        String[] comms = new String[2];
 
         int lecSize = 0;
         int commsSize = 0;
@@ -17,6 +16,7 @@ public class Main {
 
         System.out.print("Name of college: ");
         String college = scanner.nextLine();
+//        System.out.println("Your college is: " + college);
 //        System.out.println("Your college is: " + college);
 
         do {
