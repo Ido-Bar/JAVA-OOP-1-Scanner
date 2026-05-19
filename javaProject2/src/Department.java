@@ -16,4 +16,14 @@ public class Department {
 
     public int getNumStudents() { return numStudents; }
     public void setNumStudents(int numStudents) { this.numStudents = numStudents; }
+
+    @Override
+    public String toString() {
+        return "Department{" +
+                "name='" + name + '\'' +
+                ", numStudents=" + numStudents +
+                ", lecturers=" + lecturers +
+                ", numLecturers='" + numLecturers + '\'' +
+                '}';
+    }
 }

@@ -44,6 +44,11 @@ public class Main {
             //         break;
                case 3:
                    addDepartmentMenu(man, scanner);
+                   Department[] depts = man.getDepartments();
+
+                   for (Department l : depts){
+                       System.out.println(l.toString());
+                   }
                    break;
 //                case 4:
 //                    System.out.print("Provide lecturer name: ");
@@ -72,8 +77,10 @@ public class Main {
         String name;
         int numOfStudents;
         Department[] depts = man.getDepartments();
+        System.out.println(depts.length);
 
         System.out.println("Provide Department's Name...");
+        //System.out.println("Provide Department's Name...");
         name = scanner.nextLine();
         boolean isDepExists = getIsDepExists(name, depts);
 
@@ -139,6 +146,7 @@ public class Main {
 
     private static boolean lecExist(String name,Lecturer[] lecs) {
         boolean nameExist = false;
+
         for (int i = 0; i < lecs.length; i++) {
             if (lecs[i].getName().equals(name)){
                 nameExist = true;
@@ -150,6 +158,7 @@ public class Main {
 
     private static boolean getIsDepExists(String name, Department[] depts) {
         boolean isNameExists = false;
+
         for (int i = 0; i < depts.length; i++ ) {
             if (depts[i].getName().equals(name)) {
                 isNameExists = true;
