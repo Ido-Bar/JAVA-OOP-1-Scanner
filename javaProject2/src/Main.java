@@ -42,9 +42,14 @@ public class Main {
                 case 2:
                     addCommitteeMenu(man, scanner);
                     break;
-//                case 3:
-//                    Managar.addDepartment();
-//                    break;
+               case 3:
+                   addDepartmentMenu(man, scanner);
+                   Department[] depts = man.getDepartments();
+
+                   for (Department l : depts){
+                       System.out.println(l.toString());
+                   }
+                   break;
 //                case 4:
 //                    System.out.print("Provide lecturer name: ");
 //                    String addedLecturer = scanner.nextLine();
@@ -66,6 +71,29 @@ public class Main {
         } while (choice != 0);
         System.out.println("Yallah bye");
         scanner.close();
+    }
+
+    private static void addDepartmentMenu(Manager man, Scanner scanner) {
+        String name;
+        int numOfStudents;
+        Department[] depts = man.getDepartments();
+        System.out.println(depts.length);
+
+        System.out.println("Provide Department's Name...");
+        //System.out.println("Provide Department's Name...");
+        name = scanner.nextLine();
+        boolean isDepExists = getIsDepExists(name, depts);
+
+        while (isDepExists) {
+            System.out.print("Department Exists, Provide a Valid Department Name...");
+            name = scanner.nextLine();
+            isDepExists = getIsDepExists(name, depts);
+        }
+
+        System.out.print("Provide Number Of Students In Department...");
+        numOfStudents = scanner.nextInt();
+
+        man.addDepartment(name, numOfStudents);
     }
 
     private static void addLecturerMenu(Manager man, Scanner scanner){
@@ -118,11 +146,13 @@ public class Main {
 
     private static boolean lecExist(String name,Lecturer[] lecs) {
         boolean nameExist = false;
+
         for (int i = 0; i < lecs.length; i++) {
             if (lecs[i].getName().equals(name)){
                 nameExist = true;
             }
         }
+
         return nameExist;
     }
 
@@ -181,5 +211,16 @@ public class Main {
             }
         }
         return nameExist;
+    }
+    private static boolean getIsDepExists(String name, Department[] depts) {
+        boolean isNameExists = false;
+
+        for (int i = 0; i < depts.length; i++ ) {
+            if (depts[i].getName().equals(name)) {
+                isNameExists = true;
+            }
+        }
+
+        return isNameExists;
     }
 }

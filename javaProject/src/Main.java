@@ -17,7 +17,6 @@ public class Main {
         System.out.print("Name of college: ");
         String college = scanner.nextLine();
 //        System.out.println("Your college is: " + college);
-//        System.out.println("Your college is: " + college);
 
         do {
             System.out.println("--- " + college.toUpperCase() + " ACADEMIC STAFF MANAGEMENT SYSTEM ---");
