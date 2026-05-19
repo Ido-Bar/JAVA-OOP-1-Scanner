@@ -3,9 +3,10 @@ public class Committee {
     private Lecturer[] lecturers;
     private Lecturer chairman;
 
-    public Committee(String name){
+    public Committee(String name, Lecturer chairman) {
         this.name = name;
         this.lecturers = new Lecturer[2];
+        this.chairman = chairman;
     }
 
     public String getName() { return name; }
