@@ -80,8 +80,8 @@ public class Manager {
     ///                  ///
     ///     COMMITTEE    ///
     ///                  ///
-    public void addCommittee(String name){
-        Committee newComm = new Committee(name);
+    public void addCommittee(String name, Lecturer chairman) {
+        Committee newComm = new Committee(name, chairman);
 
         boolean isOverSize = commsSize == comms.length;
         if (isOverSize) { doubleCommittees(); }
