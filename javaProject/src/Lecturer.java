@@ -14,6 +14,10 @@ public class Lecturer {
 
     private static int nextId = 1;
 
+    public Lecturer() {
+        this.id = nextId++;
+    }
+
     public Lecturer(String name, Degree degreeRank, String degreeName, double salary) {
         this.name = name;
         this.id = nextId++;

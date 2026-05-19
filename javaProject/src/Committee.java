@@ -3,6 +3,8 @@ public class Committee {
     private Lecturer[] lecturers;
     private Lecturer chairman;
 
+    public Committee(){}
+
     public Committee(String name){
         this.name = name;
         this.lecturers = new Lecturer[2];
