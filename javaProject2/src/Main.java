@@ -140,7 +140,7 @@ public class Main {
         String commName = scanner.nextLine();
 
         Committee[] comms = man.getCommittees();
-        boolean commNameExist = commExist(name, comms);
+        boolean commNameExist = commExist(commName, comms);
         while (!commNameExist) {
             System.out.print("Committee Does not Exists, Provide an existing Committee name: ");
             commName = scanner.nextLine();
@@ -151,7 +151,7 @@ public class Main {
         String lecName = scanner.nextLine();
 
         Lecturer[] lecs = man.getLecturers();
-        boolean lecNameExist = lecExist(name, lecs);
+        boolean lecNameExist = lecExist(lecName, lecs);
         while (!lecNameExist){
             System.out.print("Lecturer Does not Exists, Provide an existing Lecturer name: ");
             lecName = scanner.nextLine();
