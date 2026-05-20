@@ -43,12 +43,7 @@ public class Main {
                     addCommitteeMenu(man, scanner);
                     break;
                case 3:
-                   addDepartmentMenu(man, scanner);
-                   Department[] depts = man.getDepartments();
-
-                   for (Department l : depts){
-                       System.out.println(l.toString());
-                   }
+                   addLecturerToCommittee(man, scanner);
                    break;
 //                case 4:
 //                    System.out.print("Provide lecturer name: ");
@@ -57,9 +52,16 @@ public class Main {
 //                    String addedCommittee = scanner.nextLine();
 //                    Manager.assignLecturer(addedLecturer, lecturers, addedCommittee, comms);
 //                    break;
-//                case 5, 6:
-////                    TODO: add func
-//                    WIP();
+//                case 5:
+//                    break;
+                case 6:
+                    addDepartmentMenu(man, scanner);
+                    Department[] depts = man.getDepartments();
+
+                    for (Department l : depts){
+                        System.out.println(l.toString());
+                    }
+                    break;
 //                    break;
 //                case 7:
 //                    Manager.viewElementsDetails(lecturers, lecSize, "Lecturers");
@@ -71,29 +73,6 @@ public class Main {
         } while (choice != 0);
         System.out.println("Yallah bye");
         scanner.close();
-    }
-
-    private static void addDepartmentMenu(Manager man, Scanner scanner) {
-        String name;
-        int numOfStudents;
-        Department[] depts = man.getDepartments();
-        System.out.println(depts.length);
-
-        System.out.println("Provide Department's Name...");
-        //System.out.println("Provide Department's Name...");
-        name = scanner.nextLine();
-        boolean isDepExists = getIsDepExists(name, depts);
-
-        while (isDepExists) {
-            System.out.print("Department Exists, Provide a Valid Department Name...");
-            name = scanner.nextLine();
-            isDepExists = getIsDepExists(name, depts);
-        }
-
-        System.out.print("Provide Number Of Students In Department...");
-        numOfStudents = scanner.nextInt();
-
-        man.addDepartment(name, numOfStudents);
     }
 
     private static void addLecturerMenu(Manager man, Scanner scanner){
@@ -156,6 +135,31 @@ public class Main {
         return nameExist;
     }
 
+    private static void addLecturerToCommittee(Manager man, Scanner scanner){
+        System.out.println("Provide Committee Name: ");
+        String commName = scanner.nextLine();
+
+        Committee[] comms = man.getCommittees();
+        boolean commNameExist = commExist(name, comms);
+        while (!commNameExist) {
+            System.out.print("Committee Does not Exists, Provide an existing Committee name: ");
+            commName = scanner.nextLine();
+            commNameExist = commExist(commName, comms);
+        }
+
+        System.out.print("Provide Lecturer Name: ");
+        String lecName = scanner.nextLine();
+
+        Lecturer[] lecs = man.getLecturers();
+        boolean lecNameExist = lecExist(name, lecs);
+        while (!lecNameExist){
+            System.out.print("Lecturer Does not Exists, Provide an existing Lecturer name: ");
+            lecName = scanner.nextLine();
+            lecNameExist = lecExist(lecName, lecs);
+        }
+        man.addToCommittee(commName, lecName);
+    }
+
     private static void addCommitteeMenu(Manager man, Scanner scanner) {
         String name;
         String chairmanName;
@@ -181,6 +185,7 @@ public class Main {
             chairman = man.getLecturerByName(chairmanName);
         }
 
+        // TODO: Check if okay to do this check here or if need to be in manager.
         boolean isDegreeOk = chairman.getDegreeRank().ordinal() >= Lecturer.Degree.DR.ordinal();
         while (!isDegreeOk) {
             System.out.print("Chairman must be at least DR. Provide a different Chairman name: ");
@@ -210,6 +215,29 @@ public class Main {
         }
         return nameExist;
     }
+
+    private static void addDepartmentMenu(Manager man, Scanner scanner) {
+        String name;
+        int numOfStudents;
+        Department[] depts = man.getDepartments();
+        System.out.println(depts.length);
+
+        System.out.println("Provide Department's Name...");
+        //System.out.println("Provide Department's Name...");
+        name = scanner.nextLine();
+        boolean isDepExists = getIsDepExists(name, depts);
+
+        while (isDepExists) {
+            System.out.print("Department Exists, Provide a Valid Department Name...");
+            name = scanner.nextLine();
+            isDepExists = getIsDepExists(name, depts);
+        }
+
+        System.out.print("Provide Number Of Students In Department...");
+        numOfStudents = scanner.nextInt();
+
+        man.addDepartment(name, numOfStudents);
+    }
     private static boolean getIsDepExists(String name, Department[] depts) {
         boolean isNameExists = false;
 
@@ -221,4 +249,5 @@ public class Main {
 
         return isNameExists;
     }
+
 }

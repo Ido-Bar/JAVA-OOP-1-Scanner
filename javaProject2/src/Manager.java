@@ -113,9 +113,24 @@ public class Manager {
         return activeCommitees;
     }
 
-    public boolean setCommitteeChairman(Committee comm, Lecturer chairman){
-        boolean chairmanSuccess = comm.setChairman(chairman);
-        return chairmanSuccess;
+    public Committee getCommitteeByName(String Name){
+        for (int i = 0; i < commsSize; i++) {
+            if (comms[i].getName().equals(name)) {
+                return comms[i];
+            }
+        }
+        return null; // null if no lecturer matches that name
+    }
+//    TODO: Check if needed
+//    public boolean setCommitteeChairman(Committee comm, Lecturer chairman){
+//        boolean chairmanSuccess = comm.setChairman(chairman);
+//        return chairmanSuccess;
+//    }
+
+    public void addToCommittee(String commName, String lecName){
+        Committee comm = getCommitteeByName(commName);
+        Lecturer lec = getLecturerByName(lecName);
+        comm.addLecturer(lec);
     }
   
     ///                  ///

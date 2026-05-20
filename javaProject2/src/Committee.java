@@ -11,6 +11,7 @@ public class Committee {
 
     public String getName() { return name; }
 
+    // TODO: Check if needed
     public boolean setChairman(Lecturer lec){
         // Check Degree nums with .ordinal() - I really don't know if we learned it, but it's necessary...
         if (lec.getDegreeRank().ordinal() < Lecturer.Degree.DR.ordinal()){
