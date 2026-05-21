@@ -113,7 +113,7 @@ public class Manager {
         return activeCommitees;
     }
 
-    public Committee getCommitteeByName(String Name){
+    public Committee getCommitteeByName(String name){
         for (int i = 0; i < commsSize; i++) {
             if (comms[i].getName().equals(name)) {
                 return comms[i];
