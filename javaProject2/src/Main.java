@@ -109,6 +109,7 @@ public class Main {
         while(!isValid) {
             System.out.println("Invalid input!");
             choice = scanner.nextInt();
+            isValid = (choice >= 0 && choice < degrees.length);
         }
         degreeRank = degrees[choice];
 
