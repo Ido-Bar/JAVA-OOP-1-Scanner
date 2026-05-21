@@ -140,7 +140,7 @@ public class Manager {
         Department dep = new Department(name, numOfStudents);
 
         boolean isOverSize = deptsSize == depts.length;
-        if (!isOverSize) { doubleDepts(); }
+        if (isOverSize) { doubleDepts(); }
 
         depts[deptsSize] = dep;
         deptsSize++;
