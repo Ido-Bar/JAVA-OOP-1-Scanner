@@ -2,11 +2,13 @@ public class Committee {
     private String name;
     private Lecturer[] lecturers;
     private Lecturer chairman;
+    private int lecSize;
 
     public Committee(String name, Lecturer chairman) {
         this.name = name;
         this.lecturers = new Lecturer[2];
         this.chairman = chairman;
+        lecSize = 0;
     }
 
     public String getName() { return name; }
@@ -26,7 +28,24 @@ public class Committee {
     }
 
     public void addLecturer(Lecturer lec){
-        // TODO: Multiply array size or something and then add lecturer.
+        boolean isOverSize = lecSize == lecturers.length;
+        if (isOverSize) { doubleLecturers(); }
+
+        lecturers[lecSize] = lec;
+        lecSize++;
+    }
+
+
+    private void doubleLecturers() {
+        int elemsExtFactor = 2;
+        int elemsSize = lecturers.length;
+
+        Lecturer[] newElems = new Lecturer[elemsExtFactor * elemsSize];
+
+        for (int i = 0; i < elemsSize; i++) {
+            newElems[i] = lecturers[i];
+        }
+        lecturers = newElems;
     }
 
     private void removeChairmanFromLecturers(String id){

@@ -11,7 +11,7 @@ public class Lecturer {
     private String degreeName;
     private double salary;
     private Department department;
-    private int commsSize;
+//    private int commsSize;
 
     public Lecturer(String name, String id, Degree degreeRank, String degreeName, double salary) {
         this.name = name;
@@ -19,7 +19,7 @@ public class Lecturer {
         this.degreeRank = degreeRank;
         this.degreeName = degreeName;
         this.salary = salary;
-        this.commsSize = 0;
+//        this.commsSize = 0;
     }
 
     public String getName() { return name; }
