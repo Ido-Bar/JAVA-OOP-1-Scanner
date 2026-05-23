@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Committee {
     private String name;
     private Lecturer[] lecturers;
@@ -35,7 +37,6 @@ public class Committee {
         lecSize++;
     }
 
-
     private void doubleLecturers() {
         int elemsExtFactor = 2;
         int elemsSize = lecturers.length;
@@ -50,5 +51,15 @@ public class Committee {
 
     private void removeChairmanFromLecturers(String id){
         // TODO: Check for chairman in lecturers list and remove it (Resize lecturers?).
+    }
+
+    @Override
+    public String toString() {
+        return "Committee{" +
+                "name='" + name + '\'' +
+                ", lecturers=" + Arrays.toString(lecturers) +
+                ", chairman=" + chairman.getName() +
+                ", lecSize=" + lecSize +
+                '}';
     }
 }

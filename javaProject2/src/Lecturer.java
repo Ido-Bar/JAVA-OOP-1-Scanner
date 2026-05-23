@@ -11,7 +11,8 @@ public class Lecturer {
     private String degreeName;
     private double salary;
     private Department department;
-//    private int commsSize;
+    private Committee[] committees;
+    private int commsSize;
 
     public Lecturer(String name, String id, Degree degreeRank, String degreeName, double salary) {
         this.name = name;
@@ -42,13 +43,26 @@ public class Lecturer {
 
     @Override
     public String toString() {
+        // Todo: Change this - need to display all assigned departments.
+        String depName = "";
+        String commNames = "";
+        if (department != null){
+            depName = department.getName();
+        }
+        if (committees != null){
+            for (Committee c : committees){
+                commNames += c.getName() + ", ";
+            }
+        }
         return "Lecturer{" +
                 "name='" + name + '\'' +
-                ", id=" + id +
+                ", id='" + id + '\'' +
                 ", degreeRank=" + degreeRank +
                 ", degreeName='" + degreeName + '\'' +
                 ", salary=" + salary +
-                ", department=" + department +
+                ", department=" + depName+
+                ", committees=" + commNames +
+                ", commsSize=" + commsSize +
                 '}';
     }
 }

@@ -81,6 +81,11 @@ public class Manager {
     ///     COMMITTEE    ///
     ///                  ///
     public void addCommittee(String name, Lecturer chairman) {
+        // Check again for safety
+        if (chairman.getDegreeRank().ordinal() < Lecturer.Degree.DR.ordinal()) {
+            System.out.println("Error: Chairman must be at least DR. Committee '" + name + "' was not created.");
+            return;
+        }
         Committee newComm = new Committee(name, chairman);
 
         boolean isOverSize = commsSize == comms.length;

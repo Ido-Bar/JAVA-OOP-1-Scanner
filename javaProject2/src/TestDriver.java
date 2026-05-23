@@ -293,11 +293,13 @@ public class TestDriver {
         assertThat(rejectBsc == false,
                 "Chairman degree constraint: setChairman rejects BSC");
 
-        // BUG CHECK: Constructor allows BSC chairman — assignment says this should be impossible
-        // "אין אפשרות ליצור ועדה ללא יו"ר שלא עונה על הקריטריונים"
-        // The constructor should either validate or the Manager should prevent it.
-        assertThat(false,
-                "STUB: Committee constructor should reject chairman below DR (currently allows it)");
+        // BUG CHECK: The Manager should prevent adding a committee with a BSC chairman
+        int countBefore = man.getCommittees().length;
+        man.addCommittee("InvalidComm", bscGuy);
+        int countAfter = man.getCommittees().length;
+
+        assertThat(countBefore == countAfter,
+                "Manager prevents adding a committee with chairman below DR");
 
         // Array doubling
         man.addCommittee("Ethics", drC);
