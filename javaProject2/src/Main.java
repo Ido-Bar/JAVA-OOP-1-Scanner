@@ -18,12 +18,15 @@ public class Main {
             System.out.println("0: Exit.");
             System.out.println("1: Add Lecturer.");
             System.out.println("2: Add Committee.");
-            System.out.println("3: Add Department.");
-            System.out.println("4: Assign Lecturer To a Committee.");
-            System.out.println("5: View Average Salary of All Lecturers In College.");
-            System.out.println("6: View Average Salary of All Lecturers In Chosen Deptartments.");
-            System.out.println("7: View All Lecturers Details.");
-            System.out.println("8: View All Committees Details.");
+            System.out.println("3: Assign Lecturer To a Committee.");
+            System.out.println("4: Update Committee Chairman.");
+            System.out.println("5: Remove Lecturer From a Committee.");
+            System.out.println("6: Add Department.");
+            System.out.println("7: Assign Lecturer To a Department.");
+            System.out.println("8: View Average Salary of All Lecturers In College.");
+            System.out.println("9: View Average Salary of All Lecturers In Chosen Deptartments.");
+            System.out.println("10: View All Lecturers Details.");
+            System.out.println("11: View All Committees Details.");
             System.out.print("Please choose your next action out of the preceding actions: ");
 
             choice = scanner.nextInt();
@@ -35,39 +38,43 @@ public class Main {
                 case 1:
                     addLecturerMenu(man, scanner);
                     Lecturer[] lecs = man.getLecturers();
-                    for (Lecturer l : lecs){
-                        System.out.println(l.toString());
-                    }
+//                    for (Lecturer l : lecs){
+//                        System.out.println(l.toString());
+//                    }
                     break;
                 case 2:
                     addCommitteeMenu(man, scanner);
                     break;
-               case 3:
-                   addLecturerToCommittee(man, scanner);
-                   break;
+                case 3:
+                    addLecturerToCommitteeMenu(man, scanner);
+                    break;
 //                case 4:
-//                    System.out.print("Provide lecturer name: ");
-//                    String addedLecturer = scanner.nextLine();
-//                    System.out.print("Provide committee name: ");
-//                    String addedCommittee = scanner.nextLine();
-//                    Manager.assignLecturer(addedLecturer, lecturers, addedCommittee, comms);
+//                    changeCommitteChairmanMenu(man, scanner);
 //                    break;
 //                case 5:
+//                    removeLecturerFromCommitteeMenu(man, scanner);
 //                    break;
                 case 6:
                     addDepartmentMenu(man, scanner);
                     Department[] depts = man.getDepartments();
-
                     for (Department l : depts){
                         System.out.println(l.toString());
                     }
                     break;
-//                    break;
 //                case 7:
-//                    Manager.viewElementsDetails(lecturers, lecSize, "Lecturers");
+//                    addLecturerToDepartmentMenu(man, scanner);
 //                    break;
 //                case 8:
-//                    Manager.viewElementsDetails(comms, commsSize, "Committees");
+//                    displayAvgSalary(man, scanner);
+//                    break;
+//                case 9:
+//                    displayAvgSalaryInDepartment(man, scanner);
+//                    break;
+//                case 10:
+//                    displayLecturers(man, scanner);
+//                    break;
+//                case 11:
+//                    displayCommittee(man, scanner);
 //                    break;
             }
         } while (choice != 0);
@@ -127,7 +134,7 @@ public class Main {
     private static boolean lecExist(String name,Lecturer[] lecs) {
         boolean nameExist = false;
 
-        for (int i = 0; i < lecs.length; i++) {
+for (int i = 0; i < lecs.length; i++) {
             if (lecs[i].getName().equals(name)){
                 nameExist = true;
             }
@@ -136,8 +143,8 @@ public class Main {
         return nameExist;
     }
 
-    private static void addLecturerToCommittee(Manager man, Scanner scanner){
-        System.out.println("Provide Committee Name: ");
+    private static void addLecturerToCommitteeMenu(Manager man, Scanner scanner){
+        System.out.print("Provide Committee Name: ");
         String commName = scanner.nextLine();
 
         Committee[] comms = man.getCommittees();

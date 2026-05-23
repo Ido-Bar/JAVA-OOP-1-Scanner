@@ -5,9 +5,9 @@ public class Manager {
     private Department[] depts;
     private Committee[] comms;
 
-    int lecSize;
-    int commsSize;
-    int deptsSize;
+    private int lecSize;
+    private int commsSize;
+    private int deptsSize;
 
     public Manager(String name){
         this.name = name;
