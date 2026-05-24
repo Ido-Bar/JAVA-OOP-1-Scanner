@@ -44,12 +44,12 @@ public class Main {
                 case 3:
                     addLecturerToCommitteeMenu(man, scanner);
                     break;
-//                case 4:
-//                    changeCommitteChairmanMenu(man, scanner);
-//                    break;
-//                case 5:
-//                    removeLecturerFromCommitteeMenu(man, scanner);
-//                    break;
+                case 4:
+                    changeCommitteeChairmanMenu(man, scanner);
+                    break;
+                case 5:
+                    removeLecturerFromCommitteeMenu(man, scanner);
+                    break;
                 case 6:
                     addDepartmentMenu(man, scanner);
                     Department[] depts = man.getDepartments();
@@ -153,6 +153,25 @@ public class Main {
     ///     COMMITTEE    ///
     ///                  ///
     private static void addLecturerToCommitteeMenu(Manager man, Scanner scanner){
+        String[] inputs = getCommLecInputs(man, scanner);
+        String commName = inputs[0];
+        String lecName = inputs[1];
+
+        man.addLecToCommittee(commName, lecName);
+        System.out.println("Lecturer '" + lecName + "' added successfully to Committe " + commName + "!");
+    }
+
+    private static void addCommitteeMenu(Manager man, Scanner scanner) {
+        String[] inputs = getCommChairmanInputs(man, scanner, false);
+        String name = inputs[0];
+        String chairmanName = inputs[1];
+        Lecturer chairman = man.getLecturerByName(chairmanName);
+
+        man.addCommittee(name, chairman);
+        System.out.println("Committee '" + name + "' added successfully with Chairman " + chairman.getName() + "!");
+    }
+
+    private static String[] getCommLecInputs(Manager man, Scanner scanner){
         System.out.print("Provide Committee Name: ");
         String commName = scanner.nextLine();
 
@@ -174,10 +193,10 @@ public class Main {
             lecName = scanner.nextLine();
             lecNameExist = lecExist(lecName, lecs);
         }
-        man.addToCommittee(commName, lecName);
+        return new String[]{commName, lecName};
     }
 
-    private static void addCommitteeMenu(Manager man, Scanner scanner) {
+    private static String[] getCommChairmanInputs(Manager man, Scanner scanner, boolean exist){
         String name;
         String chairmanName;
 
@@ -186,12 +205,12 @@ public class Main {
         Committee[] comms = man.getCommittees();
 
         boolean nameExist = commExist(name, comms);
-        while (nameExist) {
-            System.out.print("Committee Exists, Provide a new Committee name: ");
+        while (exist ? !nameExist : nameExist) {
+            if (exist) System.out.print("Committee Does not Exist, Provide an existing Committee name: ");
+            else System.out.print("Committee Exists, Provide a new Committee name: ");
             name = scanner.nextLine();
             nameExist = commExist(name, comms);
         }
-
         System.out.print("Provide Lecturer Chairman name: ");
         chairmanName = scanner.nextLine();
 
@@ -216,9 +235,7 @@ public class Main {
             }
             isDegreeOk = chairman.getDegreeRank().ordinal() >= Lecturer.Degree.DR.ordinal();
         }
-
-        man.addCommittee(name, chairman);
-        System.out.println("Committee '" + name + "' added successfully with Chairman " + chairman.getName() + "!");
+        return new String[]{name, chairmanName};
     }
 
     private static boolean commExist(String name,Committee[] comms) {
@@ -229,6 +246,25 @@ public class Main {
             }
         }
         return nameExist;
+    }
+
+    private static void changeCommitteeChairmanMenu(Manager man, Scanner scanner){
+        String[] inputs = getCommChairmanInputs(man, scanner, true);
+        String commName = inputs[0];
+        Committee comm = man.getCommitteeByName(commName);
+        String chairmanName = inputs[1];
+        Lecturer chairman = man.getLecturerByName(chairmanName);
+
+        man.updateCommitteeChairman(comm, chairman);
+    }
+
+    private static void removeLecturerFromCommitteeMenu(Manager man, Scanner scanner) {
+        String[] inputs = getCommLecInputs(man, scanner);
+        String commName = inputs[0];
+        String lecName = inputs[1];
+
+        man.removeLecFromCommittee(commName, lecName);
+        System.out.println("Lecturer '" + lecName + "' removed successfully from Committee "+ commName + "!");
     }
 
     private static void displayCommittee(Manager man){

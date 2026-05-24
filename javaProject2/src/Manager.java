@@ -126,16 +126,24 @@ public class Manager {
         }
         return null; // null if no lecturer matches that name
     }
-//    TODO: Check if needed
-//    public boolean setCommitteeChairman(Committee comm, Lecturer chairman){
-//        boolean chairmanSuccess = comm.setChairman(chairman);
-//        return chairmanSuccess;
-//    }
 
-    public void addToCommittee(String commName, String lecName){
+    public void updateCommitteeChairman(Committee comm,Lecturer chairman){
+        comm.updateChairman(chairman);
+    }
+
+    public void removeLecFromCommittee(String commName, String lecName){
+        Committee comm = getCommitteeByName(commName);
+        Lecturer lec = getLecturerByName(lecName);
+        if (comm != null && lec != null) {
+            comm.removeLecturer(lec);
+        }
+    }
+
+    public void addLecToCommittee(String commName, String lecName){
         Committee comm = getCommitteeByName(commName);
         Lecturer lec = getLecturerByName(lecName);
         comm.addLecturer(lec);
+        lec.addCommittee(comm);
     }
   
     ///                  ///

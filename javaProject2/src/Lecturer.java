@@ -20,6 +20,8 @@ public class Lecturer {
         this.degreeRank = degreeRank;
         this.degreeName = degreeName;
         this.salary = salary;
+        this.committees = new Committee[2];
+
 //        this.commsSize = 0;
     }
 
@@ -41,6 +43,38 @@ public class Lecturer {
     public Department getDepartment() { return department; }
     public void setDepartment(Department department) { this.department = department; }
 
+    public void addCommittee(Committee comm){
+        boolean isOverSize = commsSize == committees.length;
+        if (isOverSize) { doubleCommittees(); }
+
+        committees[commsSize] = comm;
+        commsSize++;
+    }
+    public void removeCommittee(Committee comm) {
+        for (int i = 0; i < commsSize; i++) {
+            if (committees[i].equals(comm)) {
+                for (int j = i; j < commsSize - 1; j++) {
+                    committees[j] = committees[j + 1];
+                }
+                committees[commsSize - 1] = null;
+                commsSize--;
+                break;
+            }
+        }
+    }
+
+    private void doubleCommittees() {
+        int elemsExtFactor = 2;
+        int elemsSize = committees.length;
+
+        Committee[] newElems = new Committee[elemsExtFactor * elemsSize];
+
+        for (int i = 0; i < elemsSize; i++) {
+            newElems[i] = committees[i];
+        }
+        committees = newElems;
+    }
+
     @Override
     public String toString() {
         // Todo: Change this - need to display all assigned departments.
@@ -51,7 +85,9 @@ public class Lecturer {
         }
         if (committees != null){
             for (Committee c : committees){
-                commNames += c.getName() + ", ";
+                if (c != null){
+                    commNames += c.getName() + ", ";
+                }
             }
         }
         return "Lecturer{" +
@@ -60,7 +96,7 @@ public class Lecturer {
                 ", degreeRank=" + degreeRank +
                 ", degreeName='" + degreeName + '\'' +
                 ", salary=" + salary +
-                ", department=" + depName+
+                ", department=" + depName +
                 ", committees=" + commNames +
                 ", commsSize=" + commsSize +
                 '}';

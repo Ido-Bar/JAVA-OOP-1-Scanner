@@ -183,16 +183,16 @@ public class TestDriver {
 
         assertThat(comm.getName().equals("Hiring"), "Constructor sets name");
 
-        // setChairman degree validation
+        // updateChairman degree validation
         Lecturer bsc = new Lecturer("BSC", "200000001", Lecturer.Degree.BSC, "Art", 12000.0);
         Lecturer msc = new Lecturer("MSC", "200000002", Lecturer.Degree.MSC, "Bio", 15000.0);
         Lecturer dr = new Lecturer("DR", "200000003", Lecturer.Degree.DR, "Math", 27000.0);
         Lecturer prof = new Lecturer("PROF", "200000004", Lecturer.Degree.PROF, "CS", 35000.0);
 
-        assertThat(comm.setChairman(bsc) == false, "setChairman() rejects BSC");
-        assertThat(comm.setChairman(msc) == false, "setChairman() rejects MSC");
-        assertThat(comm.setChairman(dr) == true, "setChairman() accepts DR");
-        assertThat(comm.setChairman(prof) == true, "setChairman() accepts PROF");
+        assertThat(comm.updateChairman(bsc) == false, "updateChairman() rejects BSC");
+        assertThat(comm.updateChairman(msc) == false, "updateChairman() rejects MSC");
+        assertThat(comm.updateChairman(dr) == true, "updateChairman() accepts DR");
+        assertThat(comm.updateChairman(prof) == true, "updateChairman() accepts PROF");
     }
 
     // ================================================================
@@ -286,12 +286,12 @@ public class TestDriver {
 
         // Chairman must be DR+
         // Note: The current Manager.addCommittee() does NOT validate the chairman degree,
-        // that validation is done in Main.java. We test the Committee.setChairman() constraint here.
+        // that validation is done in Main.java. We test the Committee.updateChairman() constraint here.
         Lecturer bscGuy = man.getLecturerByName("BSC Guy");
         Committee testComm = new Committee("Test", bscGuy); // Constructor doesn't validate!
-        boolean rejectBsc = testComm.setChairman(bscGuy);
+        boolean rejectBsc = testComm.updateChairman(bscGuy);
         assertThat(rejectBsc == false,
-                "Chairman degree constraint: setChairman rejects BSC");
+                "Chairman degree constraint: updateChairman rejects BSC");
 
         // BUG CHECK: The Manager should prevent adding a committee with a BSC chairman
         int countBefore = man.getCommittees().length;
@@ -330,16 +330,16 @@ public class TestDriver {
         Lecturer chair = man.getLecturerByName("Dr. Chair");
         man.addCommittee("Hiring", chair);
 
-        // addToCommittee() calls comm.addLecturer() which is a stub.
+        // addLecToCommittee() calls comm.addLecturer() which is a stub.
         // Test that it doesn't crash:
         boolean noCrash = true;
         try {
-            man.addToCommittee("Hiring", "Member A");
+            man.addLecToCommittee("Hiring", "Member A");
         } catch (Exception e) {
             noCrash = false;
         }
         assertThat(noCrash,
-                "STUB: addToCommittee('Hiring', 'Member A') does not crash");
+                "STUB: addLecToCommittee('Hiring', 'Member A') does not crash");
 
         // Verify member was actually added (requires Committee to have a getter for members)
         // Since Committee has no getLecturers()/getMemberCount(), we can't verify this yet.
@@ -347,17 +347,16 @@ public class TestDriver {
         // We'll try to add multiple members and check count:
 
         try {
-            man.addToCommittee("Hiring", "Member B");
-            man.addToCommittee("Hiring", "Member C");
+            man.addLecToCommittee("Hiring", "Member B");
+            man.addLecToCommittee("Hiring", "Member C");
         } catch (Exception e) {
             // may crash if stub doesn't handle it
         }
 
-        // TODO: Once Committee has a getMemberCount() or getLecturers():
-        // Committee hiring = man.getCommitteeByName("Hiring");
-        // assertThat(hiring.getMemberCount() == 3, "3 members added to committee");
-        assertThat(false,
-                "STUB: Verify members are actually stored in committee (needs Committee.getLecturers())");
+        // Verify members are actually stored in committee
+        Committee hiring = man.getCommitteeByName("Hiring");
+        assertThat(hiring.getLecturersInCommittee().length == 3,
+                "Verify members are actually stored in committee (needs Committee.getLecturers())");
 
         // Verify the committee must exist before adding a member
         assertThat(man.getCommitteeByName("Nonexistent") == null,
@@ -369,27 +368,58 @@ public class TestDriver {
 
         // Chairman should NOT appear in the members list
         // (per assignment: "יו"ר הועדה לא יופיע ברשימת המרצים החברים בוועדה")
-        assertThat(false,
-                "STUB: Chairman should not be in the members list (needs Committee.getLecturers())");
+        boolean chairmanInMembers = false;
+        for (Lecturer l : hiring.getLecturersInCommittee()) {
+            if (l.getName().equals("Dr. Chair")) {
+                chairmanInMembers = true;
+            }
+        }
+        assertThat(!chairmanInMembers,
+                "Chairman should not be in the members list (needs Committee.getLecturers())");
 
         // Adding the chairman as a regular member should be rejected
         // (assignment: chairman is NOT in the members list)
-        assertThat(false,
-                "STUB: Adding chairman as a member should be rejected or ignored");
+        try {
+            man.addLecToCommittee("Hiring", "Dr. Chair");
+        } catch (Exception e) {}
+        boolean chairAddedAsMember = false;
+        for (Lecturer l : hiring.getLecturersInCommittee()) {
+            if (l.getName().equals("Dr. Chair")) {
+                chairAddedAsMember = true;
+            }
+        }
+        assertThat(!chairAddedAsMember,
+                "Adding chairman as a member should be rejected or ignored");
 
         // Adding the same lecturer twice to the same committee (duplicate member)
-        assertThat(false,
-                "STUB: Adding duplicate member to same committee should be handled");
+        try {
+            man.addLecToCommittee("Hiring", "Member B");
+        } catch (Exception e) {}
+        int countB = 0;
+        for (Lecturer l : hiring.getLecturersInCommittee()) {
+            if (l.getName().equals("Member B")) {
+                countB++;
+            }
+        }
+        assertThat(countB == 1,
+                "Adding duplicate member to same committee should be handled");
 
         // A lecturer can be a member of MULTIPLE committees simultaneously
         man.addCommittee("Review", chair);
         try {
-            man.addToCommittee("Review", "Member A");
+            man.addLecToCommittee("Review", "Member A");
         } catch (Exception e) {
             // stub
         }
-        assertThat(false,
-                "STUB: Lecturer can be member of multiple committees (Member A in Hiring + Review)");
+        boolean memberAInReview = false;
+        Committee review = man.getCommitteeByName("Review");
+        for (Lecturer l : review.getLecturersInCommittee()) {
+            if (l.getName().equals("Member A")) {
+                memberAInReview = true;
+            }
+        }
+        assertThat(memberAInReview,
+                "Lecturer can be member of multiple committees (Member A in Hiring + Review)");
     }
 
     // ==================== Menu 4: Update Committee Chairman ====================
@@ -413,38 +443,45 @@ public class TestDriver {
         Committee budget = man.getCommitteeByName("Budget");
 
         // Update chairman to a valid PROF → should succeed
-        boolean updateProf = budget.setChairman(profNew);
+        boolean updateProf = budget.updateChairman(profNew);
         assertThat(updateProf == true,
                 "Update chairman to PROF: succeeds (returns true)");
 
         // Update chairman to a valid DR → should succeed
-        boolean updateDr = budget.setChairman(drOld);
+        boolean updateDr = budget.updateChairman(drOld);
         assertThat(updateDr == true,
                 "Update chairman to DR: succeeds (returns true)");
 
         // Attempt to update chairman to BSC → should fail
-        boolean updateBsc = budget.setChairman(bscLow);
+        boolean updateBsc = budget.updateChairman(bscLow);
         assertThat(updateBsc == false,
                 "Update chairman to BSC: rejected (returns false)");
 
         // Attempt to update chairman to MSC → should fail
-        boolean updateMsc = budget.setChairman(mscMid);
+        boolean updateMsc = budget.updateChairman(mscMid);
         assertThat(updateMsc == false,
                 "Update chairman to MSC: rejected (returns false)");
 
         // After rejection, original chairman should still be set
-        // (requires getChairman() on Committee — not yet available)
-        assertThat(false,
-                "STUB: After rejected update, original chairman is preserved (needs getChairman())");
+        assertThat(budget.getChairman().equals(drOld),
+                "After rejected update, original chairman is preserved (needs getChairman())");
 
         // If old chairman was a member, they should move to the members list
         // and the new chairman should be removed from members list
-        assertThat(false,
-                "STUB: Old chairman moves to members list after replacement (needs full implementation)");
+        boolean profNewIsMember = false;
+        for (Lecturer l : budget.getLecturersInCommittee()) {
+            if (l.equals(profNew)) profNewIsMember = true;
+        }
+        assertThat(profNewIsMember,
+                "Old chairman moves to members list after replacement (needs full implementation)");
 
         // New chairman is removed from members list if they were a member
-        assertThat(false,
-                "STUB: New chairman removed from members list (needs removeChairmanFromLecturers)");
+        boolean drOldIsMember = false;
+        for (Lecturer l : budget.getLecturersInCommittee()) {
+            if (l.equals(drOld)) drOldIsMember = true;
+        }
+        assertThat(!drOldIsMember,
+                "New chairman removed from members list (needs removeLecFromMembers)");
 
         // Update to a lecturer who doesn't exist — validation check
         assertThat(man.getLecturerByName("Ghost") == null,
@@ -452,8 +489,14 @@ public class TestDriver {
 
         // Scenario: new chairman is currently a member of that committee
         // They should be removed from members and become chairman
-        assertThat(false,
-                "STUB: Member promoted to chairman is removed from members list");
+        budget.addLecturer(profNew);
+        budget.updateChairman(profNew);
+        boolean profNewStillMember = false;
+        for (Lecturer l : budget.getLecturersInCommittee()) {
+            if (l.equals(profNew)) profNewStillMember = true;
+        }
+        assertThat(!profNewStillMember,
+                "Member promoted to chairman is removed from members list");
     }
 
     // ==================== Menu 5: Remove Member from Committee ====================
@@ -472,30 +515,42 @@ public class TestDriver {
 
         // Add members first (stub, may not actually add)
         try {
-            man.addToCommittee("Discipline", "Member X");
-            man.addToCommittee("Discipline", "Member Y");
+            man.addLecToCommittee("Discipline", "Member X");
+            man.addLecToCommittee("Discipline", "Member Y");
         } catch (Exception e) {
             // stub may fail
         }
 
-        // Remove a member — no such method exists yet on Manager or Committee
-        // Expected to fail until removeMember/removeLecturer is implemented
-        assertThat(false,
-                "STUB: Remove 'Member X' from 'Discipline' committee (method not implemented)");
+        // Remove a member
+        man.removeLecFromCommittee("Discipline", "Member X");
+        Committee discipline = man.getCommitteeByName("Discipline");
+        Lecturer memberX = man.getLecturerByName("Member X");
 
-        assertThat(false,
-                "STUB: After removal, member count decreases by 1 (needs implementation)");
+        boolean memberXStillIn = false;
+        for (Lecturer l : discipline.getLecturersInCommittee()) {
+            if (l.equals(memberX)) memberXStillIn = true;
+        }
+        assertThat(!memberXStillIn,
+                "Remove 'Member X' from 'Discipline' committee (method not implemented)");
 
+        assertThat(discipline.getLecturersInCommittee().length == 1,
+                "After removal, member count decreases by 1 (needs implementation)");
+
+        // Removed member's committee array is also updated (bidirectional)
         assertThat(false,
                 "STUB: Removed member's committee array is also updated (bidirectional)");
 
         // Cannot remove the chairman as a member (they're not in the list)
-        assertThat(false,
-                "STUB: Cannot remove chairman as a 'member' (they're not in the members list)");
+        int sizeBefore = discipline.getLecturersInCommittee().length;
+        man.removeLecFromCommittee("Discipline", "Dr. Chair");
+        assertThat(discipline.getLecturersInCommittee().length == sizeBefore,
+                "Cannot remove chairman as a 'member' (they're not in the members list)");
 
         // Cannot remove a lecturer who is not a member
-        assertThat(false,
-                "STUB: Removing non-member lecturer is handled gracefully");
+        sizeBefore = discipline.getLecturersInCommittee().length;
+        man.removeLecFromCommittee("Discipline", "Member X"); // already removed
+        assertThat(discipline.getLecturersInCommittee().length == sizeBefore,
+                "Removing non-member lecturer is handled gracefully");
     }
 
     // ==================== Menu 6: Add Department ====================
@@ -852,8 +907,8 @@ public class TestDriver {
 
         // Add Member A to both committees
         try {
-            man.addToCommittee("Alpha", "Member A");
-            man.addToCommittee("Beta", "Member A");
+            man.addLecToCommittee("Alpha", "Member A");
+            man.addLecToCommittee("Beta", "Member A");
         } catch (Exception e) {
             // stubs may fail
         }
