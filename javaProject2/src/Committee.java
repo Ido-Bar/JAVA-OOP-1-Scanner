@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class Committee {
     private String name;
     private Lecturer[] lecturers;
@@ -93,9 +91,17 @@ public class Committee {
 
     @Override
     public String toString() {
+        String lecNames = "";
+        if (lecturers != null){
+            for (Lecturer l : lecturers){
+                if (l != null){
+                    lecNames += l.getName() + ", ";
+                }
+            }
+        }
         return "Committee{" +
                 "name='" + name + '\'' +
-                ", lecturers=" + Arrays.toString(lecturers) +
+                ", lecturers=" + lecNames +
                 ", chairman=" + chairman.getName() +
                 ", lecSize=" + lecSize +
                 '}';
