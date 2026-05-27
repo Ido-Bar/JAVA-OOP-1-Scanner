@@ -26,4 +26,29 @@ public class Department {
                 ", numLecturers='" + numLecturers + '\'' +
                 '}';
     }
+
+    public void addLecturer(Lecturer lec) {
+        boolean isOverSize = numLecturers == lecturers.length;
+        if (isOverSize) { doubleLecturers(); }
+
+        lecturers[numLecturers] = lec;
+        numLecturers++;
+    }
+
+    public Lecturer[] getLecturers() {
+        return lecturers;
+    }
+
+    private void doubleLecturers() {
+        int elemsExtFactor = 2;
+        int elemsSize = lecturers.length;
+
+        Lecturer[] newElems = new Lecturer[elemsExtFactor * elemsSize];
+
+        for (int i = 0; i < elemsSize; i++) {
+            newElems[i] = lecturers[i];
+        }
+
+        lecturers = newElems;
+    }
 }

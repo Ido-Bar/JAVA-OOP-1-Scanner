@@ -166,5 +166,21 @@ public class Manager {
         }
         return activeDepartments;
     }
+
+    public Department getDepartByName(String name){
+        for (int i = 0; i < deptsSize; i++) {
+            if (depts[i].getName().equals(name)) {
+                return depts[i];
+            }
+        }
+        return null; // null if no lecturer matches that name
+    }
+
+    public void addLecToDept(String lecName, String deptName) {
+        Department dept = getDepartByName(deptName);
+        Lecturer lec = getLecturerByName(lecName);
+        dept.addLecturer(lec);
+        lec.setDepartment(dept);
+    }
 }
     
