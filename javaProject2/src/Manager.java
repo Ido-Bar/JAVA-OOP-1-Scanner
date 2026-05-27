@@ -1,4 +1,3 @@
-
 public class Manager {
     private String name;
     private LecManager lecMan;
@@ -55,8 +54,7 @@ public class Manager {
         for (Lecturer l : lecs){
             sumSalary += l.getSalary();
         }
-        double avg = sumSalary/lecs.length;
-        return avg;
+        return sumSalary/lecs.length;
     }
     ///                  ///
     ///     COMMITTEE    ///
