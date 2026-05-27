@@ -35,6 +35,10 @@ public class Department {
         numLecturers++;
     }
 
+    public Lecturer[] getLecturers() {
+        return lecturers;
+    }
+
     private void doubleLecturers() {
         int elemsExtFactor = 2;
         int elemsSize = lecturers.length;
