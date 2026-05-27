@@ -76,7 +76,15 @@ public class Manager {
         }
         return null; // null if no lecturer matches that name
     }
-  
+
+    public static double getAverageSalary(Lecturer[] lecs){
+        double sumSalary = 0;
+        for (Lecturer l : lecs){
+            sumSalary += l.getSalary();
+        }
+        double avg = sumSalary/lecs.length;
+        return avg;
+    }
     ///                  ///
     ///     COMMITTEE    ///
     ///                  ///
@@ -175,6 +183,11 @@ public class Manager {
         }
         return null; // null if no lecturer matches that name
     }
+    public double getAverageSalaryByDepartment(String depName){
+        Department dep = getDepartByName(depName);
+        Lecturer[] lecs = dep.getLecturers();
+        return getAverageSalary(lecs);
+
 
     public void addLecToDept(String lecName, String deptName) {
         Department dept = getDepartByName(deptName);

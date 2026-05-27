@@ -62,12 +62,12 @@ public class Main {
                     depts = man.getDepartments();
                     System.out.println(depts[0].getLecturers()[0].toString());
                     break;
-//                case 8:
-//                    displayAvgSalary(man, scanner);
-//                    break;
-//                case 9:
-//                    displayAvgSalaryInDepartment(man, scanner);
-//                    break;
+                case 8:
+                    displayAvgSalary(man);
+                    break;
+                case 9:
+                    displayAvgSalaryInDepartment(man, scanner);
+                    break;
                 case 10:
                     displayLecturers(man);
                     break;
@@ -149,6 +149,12 @@ public class Main {
         for (Lecturer l : lecs){
             System.out.println(l.toString());
         }
+    }
+
+    private static void displayAvgSalary(Manager man){
+        Lecturer[] lecs = man.getLecturers();
+        double avg = man.getAverageSalary(lecs);
+        System.out.println("The Average Salary is: " + avg);
     }
 
     ///                  ///
@@ -343,4 +349,22 @@ public class Main {
 
         return isNameExists;
     }
+
+    private static void displayAvgSalaryInDepartment(Manager man, Scanner scanner){
+        String name;
+        Department[] depts = man.getDepartments();
+
+        System.out.print("Provide Department's Name: ");
+        name = scanner.nextLine();
+        boolean isDepExists = getIsDepExists(name, depts);
+
+        while (!isDepExists) {
+            System.out.print("Department Does Note Exists, Provide an Existing Department Name: ");
+            name = scanner.nextLine();
+            isDepExists = getIsDepExists(name, depts);
+        }
+        double avg = man.getAverageSalaryByDepartment(name);
+        System.out.println("The Average Salary In Department " + name + " is: " + avg);
+    }
+
 }
