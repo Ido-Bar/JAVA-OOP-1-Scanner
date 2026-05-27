@@ -21,8 +21,6 @@ public class Lecturer {
         this.degreeName = degreeName;
         this.salary = salary;
         this.committees = new Committee[2];
-
-//        this.commsSize = 0;
     }
 
     public String getName() { return name; }
