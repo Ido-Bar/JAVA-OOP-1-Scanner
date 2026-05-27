@@ -135,7 +135,7 @@ public class Manager {
         Committee comm = getCommitteeByName(commName);
         Lecturer lec = getLecturerByName(lecName);
         if (comm != null && lec != null) {
-            comm.removeLecturer(lec);
+            comm.removeLecFromMembers(lec);
         }
     }
 
