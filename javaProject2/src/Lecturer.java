@@ -48,6 +48,7 @@ public class Lecturer {
         committees[commsSize] = comm;
         commsSize++;
     }
+
     public void removeCommittee(Committee comm) {
         for (int i = 0; i < commsSize; i++) {
             if (committees[i].equals(comm)) {
@@ -75,12 +76,11 @@ public class Lecturer {
 
     @Override
     public String toString() {
-        // Todo: Change this - need to display all assigned departments.
         String depName = "";
-        String commNames = "";
         if (department != null){
             depName = department.getName();
         }
+        String commNames = "";
         if (committees != null){
             for (Committee c : committees){
                 if (c != null){

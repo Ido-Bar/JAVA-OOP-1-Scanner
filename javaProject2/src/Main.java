@@ -52,15 +52,9 @@ public class Main {
                     break;
                 case 6:
                     addDepartmentMenu(man, scanner);
-                    Department[] depts = man.getDepartments();
-                    for (Department l : depts){
-                        System.out.println(l.toString());
-                    }
                     break;
                 case 7:
                     addLecToDepMenu(man, scanner);
-                    depts = man.getDepartments();
-                    System.out.println(depts[0].getLecturers()[0].toString());
                     break;
                 case 8:
                     displayAvgSalary(man);
