@@ -23,7 +23,6 @@ public class Committee {
 
         if (oldChairman != null) {
             addLecturer(oldChairman);
-            oldChairman.addCommittee(this);
         }
 
         return true;
@@ -32,6 +31,9 @@ public class Committee {
     public Lecturer getChairman(){ return chairman; }
 
     public void addLecturer(Lecturer lec){
+        for (Lecturer lecExist : lecMan.getLecturers()) {
+            if (lecExist.equals(lec)) { return; }
+        }
         if (lec.equals(getChairman())) return; // Lecturere is a chairman
 
         lecMan.addLecturer(lec);
@@ -62,7 +64,6 @@ public class Committee {
                 "name='" + name + '\'' +
                 ", lecturers=" + lecNames +
                 ", chairman=" + chairman.getName() +
-                ", lecSize=" + lecMan.getLecLength() +
                 '}';
     }
 }

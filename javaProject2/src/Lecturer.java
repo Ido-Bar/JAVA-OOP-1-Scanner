@@ -71,7 +71,6 @@ public class Lecturer {
                 ", salary=" + salary +
                 ", department=" + depName +
                 ", committees=" + commNames +
-                ", commsSize=" + commsSize +
                 '}';
     }
 }
