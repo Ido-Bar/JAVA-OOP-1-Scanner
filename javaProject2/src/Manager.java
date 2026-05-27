@@ -78,6 +78,7 @@ public class Manager {
     }
 
     public static double getAverageSalary(Lecturer[] lecs){
+        if (lecs.length == 0) { return 0;}
         double sumSalary = 0;
         for (Lecturer l : lecs){
             sumSalary += l.getSalary();
@@ -91,7 +92,6 @@ public class Manager {
     public void addCommittee(String name, Lecturer chairman) {
         // Check again for safety
         if (chairman.getDegreeRank().ordinal() < Lecturer.Degree.DR.ordinal()) {
-            System.out.println("Error: Chairman must be at least DR. Committee '" + name + "' was not created.");
             return;
         }
         Committee newComm = new Committee(name, chairman);
@@ -151,7 +151,6 @@ public class Manager {
         Committee comm = getCommitteeByName(commName);
         Lecturer lec = getLecturerByName(lecName);
         comm.addLecturer(lec);
-        lec.addCommittee(comm);
     }
   
     ///                  ///
@@ -192,8 +191,12 @@ public class Manager {
     public void addLecToDept(String lecName, String deptName) {
         Department dept = getDepartByName(deptName);
         Lecturer lec = getLecturerByName(lecName);
+
+        Department oldDept = lec.getDepartment(); // Remove old dep (can be only in 1)
+        if (oldDept != null) {
+            oldDept.removeLecturer(lec);
+        }
         dept.addLecturer(lec);
-        lec.setDepartment(dept);
     }
 }
     

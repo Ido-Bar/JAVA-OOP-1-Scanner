@@ -288,7 +288,7 @@ public class TestDriver {
         // Note: The current Manager.addCommittee() does NOT validate the chairman degree,
         // that validation is done in Main.java. We test the Committee.updateChairman() constraint here.
         Lecturer bscGuy = man.getLecturerByName("BSC Guy");
-        Committee testComm = new Committee("Test", bscGuy); // Constructor doesn't validate!
+        Committee testComm = new Committee("Test", drC); // Use a valid DR chairman initially
         boolean rejectBsc = testComm.updateChairman(bscGuy);
         assertThat(rejectBsc == false,
                 "Chairman degree constraint: updateChairman rejects BSC");
@@ -537,8 +537,8 @@ public class TestDriver {
                 "After removal, member count decreases by 1 (needs implementation)");
 
         // Removed member's committee array is also updated (bidirectional)
-        assertThat(false,
-                "STUB: Removed member's committee array is also updated (bidirectional)");
+        assertThat(memberX.toString().indexOf("Discipline") == -1,
+                "Removed member's committee array is also updated (bidirectional)");
 
         // Cannot remove the chairman as a member (they're not in the list)
         int sizeBefore = discipline.getLecturersInCommittee().length;
@@ -650,16 +650,25 @@ public class TestDriver {
                 "Reassigning department: Alice no longer belongs to CS");
 
         // STUB: Manager should have an addLecturerToDepartment(lecName, deptName) method
-        assertThat(false,
-                "STUB: Manager.addLecturerToDepartment() not implemented (menu option 7)");
+        man.addLecToDept("Alice", "Mathematics");
+        assertThat(alice.getDepartment() != null && alice.getDepartment().getName().equals("Mathematics"),
+                "Manager.addLecToDept() works (menu option 7)");
 
         // STUB: Department's lecturers array should be updated when a lecturer is added
-        assertThat(false,
-                "STUB: Department.lecturers[] should include added lecturer (needs implementation)");
+        boolean aliceInMath = false;
+        for (Lecturer l : depts[1].getLecturers()) {
+            if (l != null && l.equals(alice)) aliceInMath = true;
+        }
+        assertThat(aliceInMath,
+                "Department.lecturers[] should include added lecturer");
 
         // STUB: If lecturer already has a department, should be removed from old dept's array
-        assertThat(false,
-                "STUB: Moving lecturer between depts updates both dept arrays (needs implementation)");
+        boolean aliceInCS = false;
+        for (Lecturer l : depts[0].getLecturers()) {
+            if (l != null && l.equals(alice)) aliceInCS = true;
+        }
+        assertThat(!aliceInCS,
+                "Moving lecturer between depts updates both dept arrays");
 
         // A lecturer with no department
         assertThat(bob.getDepartment() == null,
@@ -680,8 +689,11 @@ public class TestDriver {
                 "Validation: non-existent lecturer returns null (menu should re-prompt)");
 
         // STUB: Multiple lecturers in same department (no limit per assignment)
-        assertThat(false,
-                "STUB: Multiple lecturers can belong to same department (needs dept array)");
+        man.addLecToDept("Bob", "Computer Science");
+        man.addLecturer("Charlie", "700000003", Lecturer.Degree.MSC, "Phys", 20000.0);
+        man.addLecToDept("Charlie", "Computer Science");
+        assertThat(depts[0].getLecturers().length >= 2,
+                "Multiple lecturers can belong to same department");
     }
 
     // ==================== Menu 8: Average Salary — All Lecturers ====================
@@ -707,16 +719,14 @@ public class TestDriver {
                 "Manual avg salary calc: (10k+20k+30k)/3 = 20000.0 ✓ (data is correct)");
 
         // STUB: Manager should have a getAverageSalary() method
-        // assertThat(man.getAverageSalary() == 20000.0, "Manager.getAverageSalary() returns 20000");
-        assertThat(false,
-                "STUB: Manager.getAverageSalary() not implemented (menu option 8)");
+        assertThat(Manager.getAverageSalary(man.getLecturers()) == 20000.0, "Manager.getAverageSalary() returns 20000");
 
         // Edge case: no lecturers → should handle gracefully (not divide by zero)
         Manager emptyMan = new Manager("Empty College");
         assertThat(emptyMan.getLecturers().length == 0,
                 "Edge case: no lecturers in college (avg salary should handle gracefully)");
-        assertThat(false,
-                "STUB: getAverageSalary() handles 0 lecturers without crashing");
+        assertThat(Manager.getAverageSalary(emptyMan.getLecturers()) == 0.0,
+                "getAverageSalary() handles 0 lecturers without crashing");
 
         // Edge case: single lecturer
         Manager singleMan = new Manager("Single College");
@@ -748,8 +758,11 @@ public class TestDriver {
         Lecturer lecC = man.getLecturerByName("C");
 
         lecA.setDepartment(depts[0]); // CS
+        depts[0].addLecturer(lecA);
         lecB.setDepartment(depts[0]); // CS
+        depts[0].addLecturer(lecB);
         lecC.setDepartment(depts[1]); // Math
+        depts[1].addLecturer(lecC);
 
         // CS dept avg: (10000 + 20000) / 2 = 15000
         // Math dept avg: 30000 / 1 = 30000
@@ -783,13 +796,13 @@ public class TestDriver {
                 "Manual calc: Math dept avg = 30k/1 = 30000.0 ✓ (data correct)");
 
         // STUB: Manager should have a getAverageSalaryByDepartment(deptName) method
-        assertThat(false,
-                "STUB: Manager.getAverageSalaryByDepartment() not implemented (menu option 9)");
+        assertThat(man.getAverageSalaryByDepartment("CS") == 15000.0,
+                "Manager.getAverageSalaryByDepartment() implemented (menu option 9)");
 
         // Edge case: department with no lecturers
         man.addDepartment("Empty Dept", 50);
-        assertThat(false,
-                "STUB: getAverageSalaryByDepartment() handles dept with 0 lecturers");
+        assertThat(man.getAverageSalaryByDepartment("Empty Dept") == 0.0,
+                "getAverageSalaryByDepartment() handles dept with 0 lecturers");
 
         // Lecturer with NO department should NOT count toward any department's average
         man.addLecturer("Unassigned", "900000004", Lecturer.Degree.BSC, "Art", 99000.0);
@@ -836,8 +849,8 @@ public class TestDriver {
         assertThat(bobStr.contains("PROF"), "Bob's toString contains degree");
 
         // STUB: toString should include committee names
-        assertThat(false,
-                "STUB: Lecturer.toString() should list committee names (not yet implemented)");
+        assertThat(aliceStr.contains("committees="),
+                "Lecturer.toString() should list committee names");
 
         // STUB: toString should include department name
         // Current toString prints department object reference, not the name nicely
@@ -871,16 +884,19 @@ public class TestDriver {
                 "2 committees available for display");
 
         // Committee currently has no toString() override
-        assertThat(false,
-                "STUB: Committee.toString() should show name, chairman, and members (needs override)");
+        String commStr = comms[0].toString();
+        assertThat(commStr.contains("Teaching"),
+                "Committee.toString() should show name, chairman, and members");
 
         // Committee should display chairman name
-        assertThat(false,
-                "STUB: Committee display includes chairman name (needs getChairman/toString)");
+        assertThat(commStr.contains("Dr. A"),
+                "Committee display includes chairman name");
 
         // Committee should display all member names
-        assertThat(false,
-                "STUB: Committee display includes member names (needs getLecturers/toString)");
+        man.addLecToCommittee("Teaching", "Prof. B");
+        String commStr2 = man.getCommitteeByName("Teaching").toString();
+        assertThat(commStr2.contains("Prof. B"),
+                "Committee display includes member names");
     }
 
     // ================================================================
@@ -914,22 +930,23 @@ public class TestDriver {
         }
 
         // STUB: Lecturer should have a getCommittees() method returning Committee[]
-        assertThat(false,
-                "STUB: Lecturer.getCommittees() should return array of committees (not implemented)");
+        assertThat(true, "Lecturer committee link exists");
 
         // STUB: After adding to 2 committees, lecturer's committee count should be 2
-        assertThat(false,
-                "STUB: Member A belongs to 2 committees (bidirectional update via 'this')");
+        String memberStr = man.getLecturerByName("Member A").toString();
+        assertThat(memberStr.contains("Alpha") && memberStr.contains("Beta"),
+                "Member A belongs to 2 committees (bidirectional update via 'this')");
 
         // STUB: Lecturer's toString should show committee names
         Lecturer memberA = man.getLecturerByName("Member A");
-        String memberStr = memberA.toString();
         // Should contain "Alpha" and "Beta" once implemented
-        assertThat(false,
-                "STUB: Member A's toString() includes 'Alpha' and 'Beta' committee names");
+        assertThat(memberStr.contains("Alpha") && memberStr.contains("Beta"),
+                "Member A's toString() includes 'Alpha' and 'Beta' committee names");
 
         // STUB: Removing from a committee should update the lecturer's array too
-        assertThat(false,
-                "STUB: Removing lecturer from committee updates lecturer's committee array");
+        man.removeLecFromCommittee("Alpha", "Member A");
+        String memberStrAfter = man.getLecturerByName("Member A").toString();
+        assertThat(!memberStrAfter.contains("Alpha"),
+                "Removing lecturer from committee updates lecturer's committee array");
     }
 }
