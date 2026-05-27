@@ -115,7 +115,7 @@ public class Manager {
         return activeCommitees;
     }
 
-    public boolean setCommitteeChairman(Committee comm, Lecturer chairman){
+    public boolean setCommitteeChairman(Committee comm, Lecturer chairman) {
         boolean chairmanSuccess = comm.setChairman(chairman);
         return chairmanSuccess;
     }
@@ -125,11 +125,28 @@ public class Manager {
         for (int i = 0; i < deptsSize; i++) {
             activeDepartments[i] = depts[i];
         }
+
         return activeDepartments;
     }
 
-    public void setLecturerToDepartment(Lecturer[] lec, Department[] dept) {
+    private Department getDepartmentByName(String deptName) {
+        depts = getDepartments();
 
+        for (Department d: depts) {
+            System.out.println(d.getName());
+            if (d.getName() == deptName) {
+                return d;
+            }
+        }
+
+        System.out.println("did not find dept: " + deptName);
+        return null;
+    };
+
+    public void setLecturerToDepartment(String lecName, String deptName) {
+        Department dept = getDepartmentByName(deptName);
+        Lecturer lec = getLecturerByName(lecName);
+        dept.addLecturer(lec);
     }
 }
     

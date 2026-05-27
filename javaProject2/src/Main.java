@@ -61,9 +61,9 @@ public class Main {
 ////                    TODO: add func
 //                    WIP();
 //                    break;
-//                case 7:
-//                    Manager.viewElementsDetails(lecturers, lecSize, "Lecturers");
-//                    break;
+                case 7:
+                    addLecturerToDepartmentMenu(man, scanner);
+                    break;
 //                case 8:
 //                    Manager.viewElementsDetails(comms, commsSize, "Committees");
 //                    break;
@@ -119,7 +119,7 @@ public class Main {
             isDeptNameExists = getIsLecturerExists(deptName, lecs);
         }
 
-
+        man.setLecturerToDepartment(lecName, deptName);
     }
 
     private static void addLecturerMenu(Manager man, Scanner scanner){
