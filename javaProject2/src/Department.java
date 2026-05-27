@@ -1,14 +1,14 @@
+import java.util.Arrays;
+
 public class Department {
     private String name;
     private int numStudents;
-    private Lecturer[] lecturers;
-    private int numLecturers;
+    private LecManager lecMan;
 
     public Department(String name, int numStudents) {
         this.name = name;
         this.numStudents = numStudents;
-        this.numLecturers = 0;
-        this.lecturers = new Lecturer[2];
+        this.lecMan = new LecManager(2);
     }
 
     public String getName() { return name; }
@@ -18,11 +18,7 @@ public class Department {
     public void setNumStudents(int numStudents) { this.numStudents = numStudents; }
 
     public void addLecturer(Lecturer lec) {
-        boolean isOverSize = numLecturers == lecturers.length;
-        if (isOverSize) { doubleLecturers(); }
-
-        lecturers[numLecturers] = lec;
-        numLecturers++;
+        lecMan.addLecturer(lec);
 
         lec.setDepartment(this); // Add department to lec
     }
@@ -61,6 +57,10 @@ public class Department {
         }
 
         return activeLecturers;
+    }
+
+    public Lecturer[] getLecturers() {
+        return lecMan.getLecturers();
     }
 
     @Override

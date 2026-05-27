@@ -1,17 +1,16 @@
 
 public class Manager {
     private String name;
-    private Lecturer[] lecturers;
+    private LecManager lecMan;
     private Department[] depts;
     private Committee[] comms;
 
-    private int lecSize;
     private int commsSize;
     private int deptsSize;
 
     public Manager(String name){
         this.name = name;
-        this.lecturers = new Lecturer[2];
+        this.lecMan = new LecManager(2);
         this.depts = new Department[2];
         this.comms = new Committee[2];
     }
@@ -27,23 +26,7 @@ public class Manager {
     public void addLecturer(String name, String id, Lecturer.Degree degreeRank, String degreeName, double salary){
         Lecturer newLec = new Lecturer(name, id, degreeRank, degreeName, salary);
 
-        boolean isOverSize = lecSize == lecturers.length;
-        if (isOverSize) { doubleLecturers(); }
-
-        lecturers[lecSize] = newLec;
-        lecSize++;
-    }
-
-    private void doubleLecturers() {
-        int elemsExtFactor = 2;
-        int elemsSize = lecturers.length;
-
-        Lecturer[] newElems = new Lecturer[elemsExtFactor * elemsSize];
-
-        for (int i = 0; i < elemsSize; i++) {
-            newElems[i] = lecturers[i];
-        }
-        lecturers = newElems;
+        lecMan.addLecturer(newLec);
     }
 
     private void doubleDepts() {
@@ -59,22 +42,11 @@ public class Manager {
     }
 
     public Lecturer[] getLecturers() {
-        Lecturer[] activeLecturers = new Lecturer[lecSize];
-
-        for (int i = 0; i < lecSize; i++) {
-            activeLecturers[i] = lecturers[i];
-        }
-
-        return activeLecturers;
+        return lecMan.getLecturers();
     }
   
     public Lecturer getLecturerByName(String name) {
-        for (int i = 0; i < lecSize; i++) {
-            if (lecturers[i].getName().equals(name)) {
-                return lecturers[i];
-            }
-        }
-        return null; // null if no lecturer matches that name
+        return lecMan.getLecturerByName(name);
     }
 
     public static double getAverageSalary(Lecturer[] lecs){

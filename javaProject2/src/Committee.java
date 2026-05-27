@@ -1,14 +1,12 @@
 public class Committee {
     private String name;
-    private Lecturer[] lecturers;
+    private LecManager lecMan;
     private Lecturer chairman;
-    private int lecSize;
 
     public Committee(String name, Lecturer chairman) {
         this.name = name;
-        this.lecturers = new Lecturer[2];
+        this.lecMan = new LecManager(2);
         this.chairman = chairman;
-        lecSize = 0;
     }
 
     public String getName() { return name; }
@@ -34,64 +32,27 @@ public class Committee {
     public Lecturer getChairman(){ return chairman; }
 
     public void addLecturer(Lecturer lec){
-        Lecturer[] lecs = getLecturersInCommittee();
         if (lec.equals(getChairman())) return; // Lecturere is a chairman
-        for (Lecturer l : lecs){
-            if (l.equals(lec)) return; // Lecturer already exist
-        }
 
-        boolean isOverSize = lecSize == lecturers.length;
-        if (isOverSize) { doubleLecturers(); }
-
-        lecturers[lecSize] = lec;
-        lecSize++;
+        lecMan.addLecturer(lec);
 
         lec.addCommittee(this); // Add committee to lec
     }
 
-    private void doubleLecturers() {
-        int elemsExtFactor = 2;
-        int elemsSize = lecturers.length;
-
-        Lecturer[] newElems = new Lecturer[elemsExtFactor * elemsSize];
-
-        for (int i = 0; i < elemsSize; i++) {
-            newElems[i] = lecturers[i];
-        }
-        lecturers = newElems;
-    }
-
     public Lecturer[] getLecturersInCommittee() {
-        Lecturer[] activeLecturers = new Lecturer[lecSize];
-
-        for (int i = 0; i < lecSize; i++) {
-            activeLecturers[i] = lecturers[i];
-        }
-
-        return activeLecturers;
+        return lecMan.getLecturers();
     }
 
     public void removeLecFromMembers(Lecturer lec){
-        for (int i = 0; i < lecSize; i++) {
-            if (lecturers[i].equals(lec)) {
-                for (int j = i; j < lecSize - 1; j++) {
-                    lecturers[j] = lecturers[j + 1];
-                }
-                lecturers[lecSize - 1] = null; // Remove chairman from position.
-                lecSize--;
-
-                // TODO: Check if change to removeCommittee(commName)
-                lec.removeCommittee(this);
-                break;
-            }
-        }
+            lecMan.removeLecturer(lec);
+            lec.removeCommittee(this);
     }
 
     @Override
     public String toString() {
         String lecNames = "";
-        if (lecturers != null){
-            for (Lecturer l : lecturers){
+        if (lecMan.getLecturers() != null){
+            for (Lecturer l : lecMan.getLecturers()){
                 if (l != null){
                     lecNames += l.getName() + ", ";
                 }
@@ -101,7 +62,7 @@ public class Committee {
                 "name='" + name + '\'' +
                 ", lecturers=" + lecNames +
                 ", chairman=" + chairman.getName() +
-                ", lecSize=" + lecSize +
+                ", lecSize=" + lecMan.getLecLength() +
                 '}';
     }
 }
