@@ -23,7 +23,6 @@ public class Committee {
 
         if (oldChairman != null) {
             addLecturer(oldChairman);
-            oldChairman.addCommittee(this);
         }
 
         return true;
@@ -65,7 +64,6 @@ public class Committee {
                 "name='" + name + '\'' +
                 ", lecturers=" + lecNames +
                 ", chairman=" + chairman.getName() +
-                ", lecSize=" + lecMan.getLecLength() +
                 '}';
     }
 }

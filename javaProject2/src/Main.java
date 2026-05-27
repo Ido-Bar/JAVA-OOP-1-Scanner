@@ -311,22 +311,22 @@ public class Main {
         Department[] depts = man.getDepartments();
 
 
-        System.out.println("Provide Department name...");
+        System.out.print("Provide Department name: ");
         deptName = scanner.nextLine();
         boolean isDeptExists = getIsDepExists(deptName, depts);
 
         while (!isDeptExists) {
-            System.out.println("Department Does Not Exists, Please Provide a Valid Department Name");
+            System.out.print("Department Does Not Exists, Please Provide a Valid Department Name: ");
             deptName = scanner.nextLine();
             isDeptExists = getIsDepExists(deptName, depts);
         }
 
-        System.out.println("Provide Lecturer name...");
+        System.out.print("Provide Lecturer name: ");
         lecName = scanner.nextLine();
         boolean isLecExists = getIsLecturerExists(lecName, lecs);
 
         while (!isLecExists) {
-            System.out.println("Lecturer Does Not Exists, Please Provide a Valid Lecturer Name");
+            System.out.print("Lecturer Does Not Exists, Please Provide a Valid Lecturer Name: ");
             lecName = scanner.nextLine();
             isLecExists = getIsLecturerExists(lecName, lecs);
         }
