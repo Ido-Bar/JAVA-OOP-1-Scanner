@@ -11,7 +11,7 @@ public class Lecturer {
     private String degreeName;
     private double salary;
     private Department department;
-    private Committee[] committees;
+    private CommManager comMan;
     private int commsSize;
 
     public Lecturer(String name, String id, Degree degreeRank, String degreeName, double salary) {
@@ -20,7 +20,7 @@ public class Lecturer {
         this.degreeRank = degreeRank;
         this.degreeName = degreeName;
         this.salary = salary;
-        this.committees = new Committee[2];
+        this.comMan = new CommManager(2);
     }
 
     public String getName() { return name; }
@@ -42,36 +42,11 @@ public class Lecturer {
     public void setDepartment(Department department) { this.department = department; }
 
     public void addCommittee(Committee comm){
-        boolean isOverSize = commsSize == committees.length;
-        if (isOverSize) { doubleCommittees(); }
-
-        committees[commsSize] = comm;
-        commsSize++;
+        comMan.addCommittee(comm.getName(), this);
     }
 
     public void removeCommittee(Committee comm) {
-        for (int i = 0; i < commsSize; i++) {
-            if (committees[i].equals(comm)) {
-                for (int j = i; j < commsSize - 1; j++) {
-                    committees[j] = committees[j + 1];
-                }
-                committees[commsSize - 1] = null;
-                commsSize--;
-                break;
-            }
-        }
-    }
-
-    private void doubleCommittees() {
-        int elemsExtFactor = 2;
-        int elemsSize = committees.length;
-
-        Committee[] newElems = new Committee[elemsExtFactor * elemsSize];
-
-        for (int i = 0; i < elemsSize; i++) {
-            newElems[i] = committees[i];
-        }
-        committees = newElems;
+        comMan.removeCommittee(comm);
     }
 
     @Override
@@ -81,8 +56,8 @@ public class Lecturer {
             depName = department.getName();
         }
         String commNames = "";
-        if (committees != null){
-            for (Committee c : committees){
+        if (comMan.getCommittees() != null){
+            for (Committee c : comMan.getCommittees()){
                 if (c != null){
                     commNames += c.getName() + ", ";
                 }
