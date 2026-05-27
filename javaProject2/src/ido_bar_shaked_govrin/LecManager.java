@@ -1,3 +1,5 @@
+package ido_bar_shaked_govrin;
+
 public class LecManager {
     private Lecturer[] lecturers;
     private int lecSize;

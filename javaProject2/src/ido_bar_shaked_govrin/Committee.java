@@ -1,3 +1,5 @@
+package ido_bar_shaked_govrin;
+
 public class Committee {
     private String name;
     private LecManager lecMan;
@@ -52,7 +54,7 @@ public class Committee {
 
     @Override
     public String toString() {
-        String lecNames = "";
+        String lecNames = " ";
         if (lecMan.getLecturers() != null){
             for (Lecturer l : lecMan.getLecturers()){
                 if (l != null){
@@ -63,7 +65,7 @@ public class Committee {
         return "Committee{" +
                 "name='" + name + '\'' +
                 ", lecturers=" + lecNames +
-                ", chairman=" + chairman.getName() +
+                "chairman=" + chairman.getName() +
                 '}';
     }
 }
