@@ -12,7 +12,6 @@ public class Lecturer {
     private double salary;
     private Department department;
     private CommManager comMan;
-    private int commsSize;
 
     public Lecturer(String name, String id, Degree degreeRank, String degreeName, double salary) {
         this.name = name;

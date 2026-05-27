@@ -79,7 +79,6 @@ public class Manager {
     ///                  ///
     ///     Department   ///
     ///                  ///
-
     public Department[] getDepartments() {
         return deptMan.getDepartments();
     }
@@ -98,7 +97,7 @@ public class Manager {
         Department dept = deptMan.getDepartByName(deptName);
         Lecturer lec = getLecturerByName(lecName);
 
-        Department oldDept = lec.getDepartment(); // Remove old dep (can be only in 1)
+        Department oldDept = lec.getDepartment();
         if (oldDept != null) {
             oldDept.removeLecturer(lec);
         }

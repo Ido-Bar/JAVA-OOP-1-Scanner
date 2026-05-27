@@ -43,6 +43,6 @@ public class DeptManager {
                 return depts[i];
             }
         }
-        return null; // null if no lecturer matches that name
+        return null; 
     }
 }

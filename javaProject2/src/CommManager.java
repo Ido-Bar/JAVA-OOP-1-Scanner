@@ -36,7 +36,6 @@ public class CommManager {
     public Committee[] getCommittees(){
         Committee[] activeCommitees = new Committee[commsSize];
 
-        // Copy only the valid Commitees over
         for (int i = 0; i < commsSize; i++) {
             activeCommitees[i] = comms[i];
         }
@@ -50,7 +49,7 @@ public class CommManager {
                 return comms[i];
             }
         }
-        return null; // null if no lecturer matches that name
+        return null; 
     }
 
     private void doubleCommittees() {

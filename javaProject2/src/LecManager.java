@@ -22,7 +22,7 @@ public class LecManager {
                 return lecturers[i];
             }
         }
-        return null; // null if no lecturer matches that name
+        return null;
     }
 
     public int getLecLength() {

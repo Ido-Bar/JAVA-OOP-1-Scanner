@@ -18,7 +18,7 @@ public class Department {
     public void addLecturer(Lecturer lec) {
         lecMan.addLecturer(lec);
 
-        lec.setDepartment(this); // Add department to lec
+        lec.setDepartment(this); 
     }
 
     public void removeLecturer(Lecturer lec) {

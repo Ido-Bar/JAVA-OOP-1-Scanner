@@ -230,7 +230,6 @@ public class Main {
             chairmanName = scanner.nextLine();
             chairman = man.getLecturerByName(chairmanName);
 
-            // Check Lecturer exist
             while (chairman == null) {
                 System.out.print("Lecturer Doesn't Exist, Provide a valid Lecturer name: ");
                 chairmanName = scanner.nextLine();
