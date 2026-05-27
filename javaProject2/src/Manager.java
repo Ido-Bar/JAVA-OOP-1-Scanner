@@ -1,17 +1,16 @@
 public class Manager {
     private String name;
     private LecManager lecMan;
-    private Department[] depts;
-    private Committee[] comms;
+    private DeptManager deptMan;
+    private CommManager comMan;
 
     private int commsSize;
-    private int deptsSize;
 
     public Manager(String name){
         this.name = name;
         this.lecMan = new LecManager(2);
-        this.depts = new Department[2];
-        this.comms = new Committee[2];
+        this.deptMan = new DeptManager(2);
+        this.comMan = new CommManager(2);
     }
 
 
@@ -26,18 +25,6 @@ public class Manager {
         Lecturer newLec = new Lecturer(name, id, degreeRank, degreeName, salary);
 
         lecMan.addLecturer(newLec);
-    }
-
-    private void doubleDepts() {
-        int elemsExtFactor = 2;
-        int elemsSize = depts.length;
-
-        Department[] newElems = new Department[elemsExtFactor * elemsSize];
-
-        for (int i = 0; i < elemsSize; i++) {
-            newElems[i] = depts[i];
-        }
-        depts = newElems;
     }
 
     public Lecturer[] getLecturers() {
@@ -59,57 +46,23 @@ public class Manager {
     ///                  ///
     ///     COMMITTEE    ///
     ///                  ///
-    public void addCommittee(String name, Lecturer chairman) {
-        // Check again for safety
-        if (chairman.getDegreeRank().ordinal() < Lecturer.Degree.DR.ordinal()) {
-            return;
-        }
-        Committee newComm = new Committee(name, chairman);
-
-        boolean isOverSize = commsSize == comms.length;
-        if (isOverSize) { doubleCommittees(); }
-
-        comms[commsSize] = newComm;
-        commsSize++;
+    public Committee getCommitteeByName(String commName) {
+        return comMan.getCommitteeByName(commName);
     }
 
-    private void doubleCommittees() {
-        int elemsExtFactor = 2;
-        int elemsSize = comms.length;
-
-        Committee[] newElems = new Committee[elemsExtFactor * elemsSize];
-
-        for (int i = 0; i < elemsSize; i++) {
-            newElems[i] = comms[i];
-        }
-        comms = newElems;
+    public Committee[] getCommittees() {
+        return comMan.getCommittees();
     }
 
-    public Committee[] getCommittees(){
-        Committee[] activeCommitees = new Committee[commsSize];
-
-        // Copy only the valid Commitees over
-        for (int i = 0; i < commsSize; i++) {
-            activeCommitees[i] = comms[i];
-        }
-
-        return activeCommitees;
+    public void addCommittee(String name, Lecturer lec) {
+        comMan.addCommittee(name, lec);
     }
 
-    public Committee getCommitteeByName(String name){
-        for (int i = 0; i < commsSize; i++) {
-            if (comms[i].getName().equals(name)) {
-                return comms[i];
-            }
-        }
-        return null; // null if no lecturer matches that name
-    }
-
-    public void updateCommitteeChairman(Committee comm,Lecturer chairman){
+    public void updateCommitteeChairman(Committee comm,Lecturer chairman) {
         comm.updateChairman(chairman);
     }
 
-    public void removeLecFromCommittee(String commName, String lecName){
+    public void removeLecFromCommittee(String commName, String lecName) {
         Committee comm = getCommitteeByName(commName);
         Lecturer lec = getLecturerByName(lecName);
         if (comm != null && lec != null) {
@@ -117,7 +70,7 @@ public class Manager {
         }
     }
 
-    public void addLecToCommittee(String commName, String lecName){
+    public void addLecToCommittee(String commName, String lecName) {
         Committee comm = getCommitteeByName(commName);
         Lecturer lec = getLecturerByName(lecName);
         comm.addLecturer(lec);
@@ -126,43 +79,25 @@ public class Manager {
     ///                  ///
     ///     Department   ///
     ///                  ///
-    public void addDepartment(String name, int numOfStudents) {
-        Department dep = new Department(name, numOfStudents);
-
-        boolean isOverSize = deptsSize == depts.length;
-        if (isOverSize) { doubleDepts(); }
-
-        depts[deptsSize] = dep;
-        deptsSize++;
-    }
-
     public Department[] getDepartments() {
-        Department[] activeDepartments = new Department[deptsSize];
-        for (int i = 0; i < deptsSize; i++) {
-            activeDepartments[i] = depts[i];
-        }
-        return activeDepartments;
+        return deptMan.getDepartments();
     }
 
-    public Department getDepartByName(String name){
-        for (int i = 0; i < deptsSize; i++) {
-            if (depts[i].getName().equals(name)) {
-                return depts[i];
-            }
-        }
-        return null; // null if no lecturer matches that name
-    }
     public double getAverageSalaryByDepartment(String depName) {
-        Department dep = getDepartByName(depName);
+        Department dep = deptMan.getDepartByName(depName);
         Lecturer[] lecs = dep.getLecturers();
         return getAverageSalary(lecs);
     }
 
+    public void addDepartment(String name, int students) {
+        deptMan.addDepartment(name, students);
+    }
+
     public void addLecToDept(String lecName, String deptName) {
-        Department dept = getDepartByName(deptName);
+        Department dept = deptMan.getDepartByName(deptName);
         Lecturer lec = getLecturerByName(lecName);
 
-        Department oldDept = lec.getDepartment(); // Remove old dep (can be only in 1)
+        Department oldDept = lec.getDepartment();
         if (oldDept != null) {
             oldDept.removeLecturer(lec);
         }

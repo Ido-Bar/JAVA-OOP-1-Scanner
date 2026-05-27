@@ -34,11 +34,11 @@ public class Committee {
         for (Lecturer lecExist : lecMan.getLecturers()) {
             if (lecExist.equals(lec)) { return; }
         }
-        if (lec.equals(getChairman())) return; // Lecturere is a chairman
+        if (lec.equals(getChairman())) return;
 
         lecMan.addLecturer(lec);
 
-        lec.addCommittee(this); // Add committee to lec
+        lec.addCommittee(this);
     }
 
     public Lecturer[] getLecturersInCommittee() {
