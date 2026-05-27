@@ -17,29 +17,12 @@ public class Department {
     public int getNumStudents() { return numStudents; }
     public void setNumStudents(int numStudents) { this.numStudents = numStudents; }
 
-    public Lecturer[] getLecturers(){
-        return lecturers;
-    }
-    @Override
-    public String toString() {
-        return "Department{" +
-                "name='" + name + '\'' +
-                ", numStudents=" + numStudents +
-                ", lecturers=" + lecturers +
-                ", numLecturers='" + numLecturers + '\'' +
-                '}';
-    }
-
     public void addLecturer(Lecturer lec) {
         boolean isOverSize = numLecturers == lecturers.length;
         if (isOverSize) { doubleLecturers(); }
 
         lecturers[numLecturers] = lec;
         numLecturers++;
-    }
-
-    public Lecturer[] getLecturers() {
-        return lecturers;
     }
 
     private void doubleLecturers() {
@@ -53,5 +36,19 @@ public class Department {
         }
 
         lecturers = newElems;
+    }
+
+    public Lecturer[] getLecturers() {
+        return lecturers;
+    }
+
+    @Override
+    public String toString() {
+        return "Department{" +
+                "name='" + name + '\'' +
+                ", numStudents=" + numStudents +
+                ", lecturers=" + lecturers +
+                ", numLecturers='" + numLecturers + '\'' +
+                '}';
     }
 }
