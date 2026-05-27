@@ -24,39 +24,7 @@ public class Department {
     }
 
     public void removeLecturer(Lecturer lec) {
-        for (int i = 0; i < numLecturers; i++) {
-            if (lecturers[i].equals(lec)) {
-                for (int j = i; j < numLecturers - 1; j++) {
-                    lecturers[j] = lecturers[j + 1];
-                }
-                lecturers[numLecturers - 1] = null;
-                numLecturers--;
-                break;
-            }
-        }
-    }
-
-    private void doubleLecturers() {
-        int elemsExtFactor = 2;
-        int elemsSize = lecturers.length;
-
-        Lecturer[] newElems = new Lecturer[elemsExtFactor * elemsSize];
-
-        for (int i = 0; i < elemsSize; i++) {
-            newElems[i] = lecturers[i];
-        }
-
-        lecturers = newElems;
-    }
-
-    public Lecturer[] getLecturers() {
-        Lecturer[] activeLecturers = new Lecturer[numLecturers];
-
-        for (int i = 0; i < numLecturers; i++) {
-            activeLecturers[i] = lecturers[i];
-        }
-
-        return activeLecturers;
+        lecMan.removeLecturer(lec);
     }
 
     public Lecturer[] getLecturers() {
@@ -66,6 +34,7 @@ public class Department {
     @Override
     public String toString() {
         String lecNames = "";
+        Lecturer[] lecturers = lecMan.getLecturers();
         if (lecturers != null){
             for (Lecturer l : lecturers){
                 if (l != null){
@@ -77,7 +46,7 @@ public class Department {
                 "name='" + name + '\'' +
                 ", numStudents=" + numStudents +
                 ", lecturers=" + lecNames +
-                ", numLecturers='" + numLecturers + '\'' +
+                ", numLecturers='" + lecturers.length + '\'' +
                 '}';
     }
 }
