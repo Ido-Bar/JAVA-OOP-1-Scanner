@@ -1,3 +1,5 @@
+package ido_bar_shaked_govrin;
+
 public class Manager {
     private String name;
     private LecManager lecMan;

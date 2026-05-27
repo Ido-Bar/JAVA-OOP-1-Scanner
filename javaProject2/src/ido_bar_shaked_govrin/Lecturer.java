@@ -1,3 +1,5 @@
+package ido_bar_shaked_govrin;
+
 public class Lecturer {
     public enum Degree {
         BSC,
@@ -41,7 +43,7 @@ public class Lecturer {
     public void setDepartment(Department department) { this.department = department; }
 
     public void addCommittee(Committee comm){
-        comMan.addCommittee(comm.getName(), this);
+        comMan.addExistingCommittee(comm);
     }
 
     public void removeCommittee(Committee comm) {

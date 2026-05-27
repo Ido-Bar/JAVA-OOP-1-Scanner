@@ -1,3 +1,5 @@
+package ido_bar_shaked_govrin;
+
 public class DeptManager {
     private Department[] depts;
     private int deptsSize;

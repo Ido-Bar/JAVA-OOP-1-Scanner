@@ -1,3 +1,5 @@
+package ido_bar_shaked_govrin;
+
 public class CommManager {
     private Committee[] comms;
     private int commsSize;
@@ -17,6 +19,14 @@ public class CommManager {
         if (isOverSize) { doubleCommittees(); }
 
         comms[commsSize] = newComm;
+        commsSize++;
+    }
+
+    public void addExistingCommittee(Committee comm){
+        boolean isOverSize = commsSize == comms.length;
+        if (isOverSize) { doubleCommittees(); }
+
+        comms[commsSize] = comm;
         commsSize++;
     }
 

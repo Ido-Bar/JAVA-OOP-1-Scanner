@@ -1,3 +1,4 @@
+package ido_bar_shaked_govrin;
 import java.util.Scanner;
 
 public class Main {
@@ -160,6 +161,16 @@ public class Main {
         String commName = inputs[0];
         String lecName = inputs[1];
 
+        // Check if lecturer is a chairman
+        Committee comm = man.getCommitteeByName(commName);
+        Lecturer chairman = comm.getChairman();
+        boolean isChairman = chairman.getName().equals(lecName);
+        while (isChairman){
+            System.out.print("Lecturer is a Chairman, Provide a non Chairman Lecturer name: ");
+            lecName = scanner.nextLine();
+            isChairman = chairman.getName().equals(lecName);
+        }
+
         man.addLecToCommittee(commName, lecName);
         System.out.println("Lecturer '" + lecName + "' added successfully to Committe " + commName + "!");
     }
@@ -196,6 +207,16 @@ public class Main {
             lecName = scanner.nextLine();
             lecNameExist = getIsLecturerExists(lecName, lecs);
         }
+
+        Committee comm = man.getCommitteeByName(commName);
+        lecs = comm.getLecturersInCommittee();
+        lecNameExist = getIsLecturerExists(lecName, lecs);
+        while (lecNameExist){
+            System.out.print("Lecturer Exists in Committee, Provide non existing Lecturer in Committee name: ");
+            lecName = scanner.nextLine();
+            lecNameExist = getIsLecturerExists(lecName, lecs);
+        }
+
         return new String[]{commName, lecName};
     }
 
