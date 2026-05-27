@@ -1,14 +1,14 @@
+import java.util.Arrays;
+
 public class Department {
     private String name;
     private int numStudents;
-    private Lecturer[] lecturers;
-    private int numLecturers;
+    private LecManager lecMan;
 
     public Department(String name, int numStudents) {
         this.name = name;
         this.numStudents = numStudents;
-        this.numLecturers = 0;
-        this.lecturers = new Lecturer[2];
+        this.lecMan = new LecManager(2);
     }
 
     public String getName() { return name; }
@@ -18,28 +18,11 @@ public class Department {
     public void setNumStudents(int numStudents) { this.numStudents = numStudents; }
 
     public void addLecturer(Lecturer lec) {
-        boolean isOverSize = numLecturers == lecturers.length;
-        if (isOverSize) { doubleLecturers(); }
-
-        lecturers[numLecturers] = lec;
-        numLecturers++;
-    }
-
-    private void doubleLecturers() {
-        int elemsExtFactor = 2;
-        int elemsSize = lecturers.length;
-
-        Lecturer[] newElems = new Lecturer[elemsExtFactor * elemsSize];
-
-        for (int i = 0; i < elemsSize; i++) {
-            newElems[i] = lecturers[i];
-        }
-
-        lecturers = newElems;
+        lecMan.addLecturer(lec);
     }
 
     public Lecturer[] getLecturers() {
-        return lecturers;
+        return lecMan.getLecturers();
     }
 
     @Override
@@ -47,8 +30,8 @@ public class Department {
         return "Department{" +
                 "name='" + name + '\'' +
                 ", numStudents=" + numStudents +
-                ", lecturers=" + lecturers +
-                ", numLecturers='" + numLecturers + '\'' +
+                ", lecturers=" + Arrays.toString(getLecturers()) +
+                ", numLecturers='" + lecMan.getLecLength() + '\'' +
                 '}';
     }
 }
