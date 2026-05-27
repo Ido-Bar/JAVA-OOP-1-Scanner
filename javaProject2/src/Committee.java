@@ -32,6 +32,9 @@ public class Committee {
     public Lecturer getChairman(){ return chairman; }
 
     public void addLecturer(Lecturer lec){
+        for (Lecturer lecExist : lecMan.getLecturers()) {
+            if (lecExist.equals(lec)) { return; }
+        }
         if (lec.equals(getChairman())) return; // Lecturere is a chairman
 
         lecMan.addLecturer(lec);
