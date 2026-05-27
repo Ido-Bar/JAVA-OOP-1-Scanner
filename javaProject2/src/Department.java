@@ -17,6 +17,9 @@ public class Department {
     public int getNumStudents() { return numStudents; }
     public void setNumStudents(int numStudents) { this.numStudents = numStudents; }
 
+    public Lecturer[] getLecturers(){
+        return lecturers;
+    }
     @Override
     public String toString() {
         return "Department{" +
