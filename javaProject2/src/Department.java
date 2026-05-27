@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class Department {
     private String name;
     private int numStudents;
@@ -46,7 +44,6 @@ public class Department {
                 "name='" + name + '\'' +
                 ", numStudents=" + numStudents +
                 ", lecturers=" + lecNames +
-                ", numLecturers='" + lecturers.length + '\'' +
                 '}';
     }
 }
