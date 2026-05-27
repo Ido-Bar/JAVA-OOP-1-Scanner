@@ -70,11 +70,7 @@ public class Committee {
         return activeLecturers;
     }
 
-    public void removeLecturer(Lecturer lec) {
-        removeLecFromMembers(lec); // Reused - not only for chairman
-    }
-
-    private void removeLecFromMembers(Lecturer lec){
+    public void removeLecFromMembers(Lecturer lec){
         for (int i = 0; i < lecSize; i++) {
             if (lecturers[i].equals(lec)) {
                 for (int j = i; j < lecSize - 1; j++) {
