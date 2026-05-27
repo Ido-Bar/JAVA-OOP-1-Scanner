@@ -129,9 +129,10 @@ public class Main {
 
     private static boolean getIsLecturerExists(String name, Lecturer[] lecs) {
         boolean nameExist = false;
-        for (int i = 0; i < lecs.length; i++) {
-            if (lecs[i].getName().equals(name)){
+        for (Lecturer lec : lecs) {
+            if (lec.getName().equals(name)) {
                 nameExist = true;
+                break;
             }
         }
 
@@ -147,7 +148,7 @@ public class Main {
 
     private static void displayAvgSalary(Manager man){
         Lecturer[] lecs = man.getLecturers();
-        double avg = man.getAverageSalary(lecs);
+        double avg = Manager.getAverageSalary(lecs);
         System.out.println("The Average Salary is: " + avg);
     }
 
@@ -207,7 +208,7 @@ public class Main {
         Committee[] comms = man.getCommittees();
 
         boolean nameExist = commExist(name, comms);
-        while (exist ? !nameExist : nameExist) {
+        while (exist != nameExist) {
             if (exist) System.out.print("Committee Does not Exist, Provide an existing Committee name: ");
             else System.out.print("Committee Exists, Provide a new Committee name: ");
             name = scanner.nextLine();
@@ -242,9 +243,10 @@ public class Main {
 
     private static boolean commExist(String name,Committee[] comms) {
         boolean nameExist = false;
-        for (int i = 0; i < comms.length; i++) {
-            if (comms[i].getName().equals(name)){
+        for (Committee comm : comms) {
+            if (comm.getName().equals(name)) {
                 nameExist = true;
+                break;
             }
         }
         return nameExist;
@@ -335,9 +337,10 @@ public class Main {
     private static boolean getIsDepExists(String name, Department[] depts) {
         boolean isNameExists = false;
 
-        for (int i = 0; i < depts.length; i++ ) {
-            if (depts[i].getName().equals(name)) {
+        for (Department dept : depts) {
+            if (dept.getName().equals(name)) {
                 isNameExists = true;
+                break;
             }
         }
 
