@@ -10,14 +10,8 @@
  * Organized by menu option (0–11) from the assignment spec (sub2java.pdf),
  * plus class-level unit tests.
  */
-import ido_bar_shaked_govrin.Main;
-import ido_bar_shaked_govrin.Manager;
-import ido_bar_shaked_govrin.Committee;
-import ido_bar_shaked_govrin.CommManager;
-import ido_bar_shaked_govrin.Lecturer;
-import ido_bar_shaked_govrin.LecManager;
-import ido_bar_shaked_govrin.DeptManager;
-import ido_bar_shaked_govrin.Department;
+import ido_bar_shaked_govrin.*;
+
 public class TestDriver {
 
     private static int passed = 0;
