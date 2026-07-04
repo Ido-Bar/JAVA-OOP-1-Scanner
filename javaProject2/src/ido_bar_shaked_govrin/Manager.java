@@ -22,7 +22,6 @@ public class Manager {
     ///     LECTURER     ///
     ///                  ///
     public void addLecturer(Lecturer lec) throws ItemAlreadyExistsException {
-        // Check if lecturer already exists
         Lecturer existing = lecMan.getLecturerByName(lec.getName());
         if (existing != null) {
             throw new ItemAlreadyExistsException("Lecturer '" + lec.getName() + "' already exists");
@@ -61,7 +60,7 @@ public class Manager {
         comMan.addCommittee(name, chairman);
     }
 
-    public void updateCommitteeChairman(Committee comm, Dr chairman) throws InvalidChairmanException {
+    public void updateCommitteeChairman(Committee comm, Dr chairman) throws InvalidChairmanException, LecturerAlreadyInCommitteeException {
         comm.updateChairman(chairman);
     }
 
@@ -89,35 +88,24 @@ public class Manager {
         comm.addLecturer(lec);
     }
 
-    public Committee duplicateCommittee(String commName) throws ItemNotFoundException, ItemAlreadyExistsException {
+    public Committee duplicateCommittee(String commName) throws ItemNotFoundException, ItemAlreadyExistsException, LecturerAlreadyInCommitteeException {
         Committee original = getCommitteeByName(commName);
         if (original == null) {
             throw new ItemNotFoundException("Committee '" + commName + "' not found");
         }
 
         String newName = commName + "-new";
-
-        // Check if committee with newName already exists
         if (getCommitteeByName(newName) != null) {
             throw new ItemAlreadyExistsException("Committee '" + newName + "' already exists");
         }
-
-        // Create new committee with same chairman
         Committee duplicate = new Committee(newName, original.getChairman());
 
-        // Add all existing members to the duplicate
         Lecturer[] members = original.getLecturersInCommittee();
         for (Lecturer member : members) {
             if (member != null) {
-                try {
-                    duplicate.addLecturer(member);
-                } catch (LecturerAlreadyInCommitteeException e) {
-                    // Should not happen during duplication, ignore
-                }
+                duplicate.addLecturer(member);
             }
         }
-
-        // Add the duplicate to the manager
         comMan.addExistingCommittee(duplicate);
 
         return duplicate;
@@ -140,7 +128,6 @@ public class Manager {
     }
 
     public void addDepartment(String name, int students) throws ItemAlreadyExistsException {
-        // Check if department already exists
         Department existing = deptMan.getDepartByName(name);
         if (existing != null) {
             throw new ItemAlreadyExistsException("Department '" + name + "' already exists");

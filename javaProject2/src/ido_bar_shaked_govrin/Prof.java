@@ -11,7 +11,6 @@ public class Prof extends Dr {
     public String getProfessorshipBody() {
         return professorshipBody;
     }
-
     public void setProfessorshipBody(String professorshipBody) {
         this.professorshipBody = professorshipBody;
     }
@@ -19,7 +18,7 @@ public class Prof extends Dr {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Prof)) return false;
         Prof prof = (Prof) o;
         return getName().equals(prof.getName()) && getId().equals(prof.getId());
     }

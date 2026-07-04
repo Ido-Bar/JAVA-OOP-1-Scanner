@@ -53,7 +53,7 @@ public class Lecturer {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Lecturer)) return false;
         Lecturer lecturer = (Lecturer) o;
         return name.equals(lecturer.name) && id.equals(lecturer.id);
     }

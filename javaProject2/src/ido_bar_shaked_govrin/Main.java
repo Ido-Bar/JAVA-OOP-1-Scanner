@@ -28,7 +28,7 @@ public class Main {
             System.out.println("9: View Average Salary of All Lecturers In Chosen Deptartments.");
             System.out.println("10: View All Lecturers Details.");
             System.out.println("11: View All Committees Details.");
-            System.out.println("12: Compare Dr/Professors by Number of Articles.");
+            System.out.println("12: Compare Dr/Prof by Number of Articles.");
             System.out.println("13: Compare Committees.");
             System.out.println("14: Duplicate Committee.");
             System.out.print("Please choose your next action out of the preceding actions: ");
@@ -100,7 +100,6 @@ public class Main {
         System.out.print("Provide Lecturer name: ");
         name = scanner.nextLine();
 
-        // Check if lecturer already exists
         while (man.getLecturerByName(name) != null) {
             System.out.print("Lecturer Exists, Provide a Lecturer name: ");
             name = scanner.nextLine();
@@ -117,14 +116,14 @@ public class Main {
             i++;
         }
 
-        int degreeChoice = scanner.nextInt();
-        boolean isValid = (degreeChoice >= 0 && degreeChoice < degrees.length);
+        int choice = scanner.nextInt();
+        boolean isValid = (choice >= 0 && choice < degrees.length);
         while(!isValid) {
             System.out.println("Invalid input!");
-            degreeChoice = scanner.nextInt();
-            isValid = (degreeChoice >= 0 && degreeChoice < degrees.length);
+            choice = scanner.nextInt();
+            isValid = (choice >= 0 && choice < degrees.length);
         }
-        degreeRank = degrees[degreeChoice];
+        degreeRank = degrees[choice];
 
         scanner.nextLine();
 
@@ -135,15 +134,14 @@ public class Main {
         salary = scanner.nextDouble();
         scanner.nextLine();
 
-        // If DR or PROF, ask for articles
         if (degreeRank == Lecturer.Degree.DR || degreeRank == Lecturer.Degree.PROF) {
-            System.out.print("How many articles does this lecturer have? ");
+            System.out.print("How many articles does the lecturer have? ");
             int numArticles = scanner.nextInt();
             scanner.nextLine();
 
             String[] articles = new String[numArticles];
             for (int j = 0; j < numArticles; j++) {
-                System.out.print("Enter article " + (j + 1) + " name: ");
+                System.out.print("Enter article " + (j+1) + " name: ");
                 articles[j] = scanner.nextLine();
             }
 
@@ -151,6 +149,7 @@ public class Main {
                 System.out.print("Provide Professorship Body name: ");
                 String professorshipBody = scanner.nextLine();
                 Prof prof = new Prof(name, id, degreeRank, degreeName, salary, articles, professorshipBody);
+
                 try {
                     man.addLecturer(prof);
                     System.out.println("Professor '" + name + "' added successfully!");
@@ -170,7 +169,7 @@ public class Main {
             Lecturer lec = new Lecturer(name, id, degreeRank, degreeName, salary);
             try {
                 man.addLecturer(lec);
-                System.out.println("Lecturer '" + name + "' added successfully!");
+                System.out.println("Lecturer '" + name + "' added successfully");
             } catch (ItemAlreadyExistsException e) {
                 System.out.println(e.getMessage());
             }
@@ -228,12 +227,10 @@ public class Main {
         System.out.print("Provide Committee Name: ");
         String name = scanner.nextLine();
 
-        // Check if committee already exists
         while (man.getCommitteeByName(name) != null) {
             System.out.print("Committee Exists, Provide a new Committee name: ");
             name = scanner.nextLine();
         }
-
         System.out.print("Provide Lecturer Chairman name: ");
         String chairmanName = scanner.nextLine();
 
@@ -243,13 +240,10 @@ public class Main {
             chairmanName = scanner.nextLine();
             chairman = man.getLecturerByName(chairmanName);
         }
-
-        // Chairman must be at least DR
         while (!(chairman instanceof Dr)) {
             System.out.print("Chairman must be at least DR. Provide a different Chairman name: ");
             chairmanName = scanner.nextLine();
             chairman = man.getLecturerByName(chairmanName);
-
             while (chairman == null) {
                 System.out.print("Lecturer Doesn't Exist, Provide a valid Lecturer name: ");
                 chairmanName = scanner.nextLine();
@@ -287,13 +281,10 @@ public class Main {
             chairmanName = scanner.nextLine();
             chairman = man.getLecturerByName(chairmanName);
         }
-
-        // Chairman must be at least DR (type-checked via instanceof)
         while (!(chairman instanceof Dr)) {
             System.out.print("Chairman must be at least DR. Provide a different Chairman name: ");
             chairmanName = scanner.nextLine();
             chairman = man.getLecturerByName(chairmanName);
-
             while (chairman == null) {
                 System.out.print("Lecturer Doesn't Exist, Provide a valid Lecturer name: ");
                 chairmanName = scanner.nextLine();
@@ -304,7 +295,7 @@ public class Main {
         try {
             man.updateCommitteeChairman(comm, (Dr) chairman);
             System.out.println("Chairman of Committee '" + commName + "' updated to " + chairmanName + "!");
-        } catch (InvalidChairmanException e) {
+        } catch (InvalidChairmanException | LecturerAlreadyInCommitteeException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -427,7 +418,6 @@ public class Main {
         }
 
         if (subChoice == 1) {
-            // Compare by number of members (Comparable)
             int result = comm1.compareTo(comm2);
             System.out.println(comm1.getName() + " has " + comm1.getMemberCount() + " members.");
             System.out.println(comm2.getName() + " has " + comm2.getMemberCount() + " members.");
@@ -440,12 +430,10 @@ public class Main {
                 System.out.println("Both committees have the same number of members.");
             }
         } else {
-            // Compare by total articles (Comparator)
             Committee.ArticleComparator comparator = new Committee.ArticleComparator();
             int result = comparator.compare(comm1, comm2);
             System.out.println(comm1.getName() + " has " + comm1.getTotalArticles() + " total articles.");
             System.out.println(comm2.getName() + " has " + comm2.getTotalArticles() + " total articles.");
-
             if (result > 0) {
                 System.out.println(comm1.getName() + " has more total articles than " + comm2.getName() + ".");
             } else if (result < 0) {
@@ -477,6 +465,8 @@ public class Main {
             System.out.println(e.getMessage());
         } catch (ItemAlreadyExistsException e) {
             System.out.println(e.getMessage());
+        } catch (LecturerAlreadyInCommitteeException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -490,7 +480,6 @@ public class Main {
         System.out.print("Provide Department's Name: ");
         name = scanner.nextLine();
 
-        // Check if department already exists
         Department[] depts = man.getDepartments();
         boolean isDepExists = getIsDepExists(name, depts);
         while (isDepExists) {
@@ -498,11 +487,9 @@ public class Main {
             name = scanner.nextLine();
             isDepExists = getIsDepExists(name, depts);
         }
-
         System.out.print("Provide Number Of Students In Department: ");
         numOfStudents = scanner.nextInt();
         scanner.nextLine();
-
         try {
             man.addDepartment(name, numOfStudents);
             System.out.println("Department '" + name + "' added successfully!");
@@ -521,7 +508,7 @@ public class Main {
         boolean isDeptExists = getIsDepExists(deptName, depts);
 
         while (!isDeptExists) {
-            System.out.print("Department Does Not Exist, Please Provide a Valid Department Name: ");
+            System.out.print("Department Does Note Exists, Please Provide a Valid Department Name: ");
             deptName = scanner.nextLine();
             isDeptExists = getIsDepExists(deptName, depts);
         }

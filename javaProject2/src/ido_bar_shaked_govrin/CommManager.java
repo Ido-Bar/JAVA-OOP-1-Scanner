@@ -10,7 +10,6 @@ public class CommManager {
     }
 
     public void addCommittee(String name, Dr chairman) throws InvalidChairmanException, ItemAlreadyExistsException {
-        // Check if committee with same name already exists
         for (int i = 0; i < commsSize; i++) {
             if (comms[i].getName().equals(name)) {
                 throw new ItemAlreadyExistsException("Committee '" + name + "' already exists");
@@ -18,7 +17,7 @@ public class CommManager {
         }
 
         if (chairman.getDegreeRank().ordinal() < Lecturer.Degree.DR.ordinal()) {
-            throw new InvalidChairmanException("Chairman must be at least DR. Lecturer '" + chairman.getName() + "' has degree " + chairman.getDegreeRank());
+            throw new InvalidChairmanException("Chairman must be at least dr.Lecturer '" + chairman.getName() + "' has degree " + chairman.getDegreeRank());
         }
         Committee newComm = new Committee(name, chairman);
 
@@ -56,7 +55,6 @@ public class CommManager {
         for (int i = 0; i < commsSize; i++) {
             activeCommitees[i] = comms[i];
         }
-
         return activeCommitees;
     }
 
@@ -74,7 +72,6 @@ public class CommManager {
         int elemsSize = comms.length;
 
         Committee[] newElems = new Committee[elemsExtFactor * elemsSize];
-
         for (int i = 0; i < elemsSize; i++) {
             newElems[i] = comms[i];
         }

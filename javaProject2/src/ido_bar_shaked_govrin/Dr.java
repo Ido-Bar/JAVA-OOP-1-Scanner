@@ -55,7 +55,7 @@ public class Dr extends Lecturer implements Comparable<Dr> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Dr)) return false;
         Dr dr = (Dr) o;
         return getName().equals(dr.getName()) && getId().equals(dr.getId());
     }
