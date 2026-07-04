@@ -9,9 +9,15 @@ public class CommManager {
         commsSize = 0;
     }
 
-    public void addCommittee(String name, Lecturer chairman) {
+    public void addCommittee(String name, Dr chairman) throws InvalidChairmanException, ItemAlreadyExistsException {
+        for (int i = 0; i < commsSize; i++) {
+            if (comms[i].getName().equals(name)) {
+                throw new ItemAlreadyExistsException("Committee '" + name + "' already exists");
+            }
+        }
+
         if (chairman.getDegreeRank().ordinal() < Lecturer.Degree.DR.ordinal()) {
-            return;
+            throw new InvalidChairmanException("Chairman must be at least dr.Lecturer '" + chairman.getName() + "' has degree " + chairman.getDegreeRank());
         }
         Committee newComm = new Committee(name, chairman);
 
@@ -49,7 +55,6 @@ public class CommManager {
         for (int i = 0; i < commsSize; i++) {
             activeCommitees[i] = comms[i];
         }
-
         return activeCommitees;
     }
 
@@ -67,7 +72,6 @@ public class CommManager {
         int elemsSize = comms.length;
 
         Committee[] newElems = new Committee[elemsExtFactor * elemsSize];
-
         for (int i = 0; i < elemsSize; i++) {
             newElems[i] = comms[i];
         }

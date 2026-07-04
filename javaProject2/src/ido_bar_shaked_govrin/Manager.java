@@ -6,8 +6,6 @@ public class Manager {
     private DeptManager deptMan;
     private CommManager comMan;
 
-    private int commsSize;
-
     public Manager(String name){
         this.name = name;
         this.lecMan = new LecManager(2);
@@ -23,10 +21,12 @@ public class Manager {
     ///                  ///
     ///     LECTURER     ///
     ///                  ///
-    public void addLecturer(String name, String id, Lecturer.Degree degreeRank, String degreeName, double salary){
-        Lecturer newLec = new Lecturer(name, id, degreeRank, degreeName, salary);
-
-        lecMan.addLecturer(newLec);
+    public void addLecturer(Lecturer lec) throws ItemAlreadyExistsException {
+        Lecturer existing = lecMan.getLecturerByName(lec.getName());
+        if (existing != null) {
+            throw new ItemAlreadyExistsException("Lecturer '" + lec.getName() + "' already exists");
+        }
+        lecMan.addLecturer(lec);
     }
 
     public Lecturer[] getLecturers() {
@@ -56,28 +56,61 @@ public class Manager {
         return comMan.getCommittees();
     }
 
-    public void addCommittee(String name, Lecturer lec) {
-        comMan.addCommittee(name, lec);
+    public void addCommittee(String name, Dr chairman) throws InvalidChairmanException, ItemAlreadyExistsException {
+        comMan.addCommittee(name, chairman);
     }
 
-    public void updateCommitteeChairman(Committee comm,Lecturer chairman) {
+    public void updateCommitteeChairman(Committee comm, Dr chairman) throws InvalidChairmanException, LecturerAlreadyInCommitteeException {
         comm.updateChairman(chairman);
     }
 
-    public void removeLecFromCommittee(String commName, String lecName) {
+    public void removeLecFromCommittee(String commName, String lecName) throws ItemNotFoundException {
         Committee comm = getCommitteeByName(commName);
         Lecturer lec = getLecturerByName(lecName);
-        if (comm != null && lec != null) {
-            comm.removeLecFromMembers(lec);
+        if (comm == null) {
+            throw new ItemNotFoundException("Committee '" + commName + "' not found");
         }
+        if (lec == null) {
+            throw new ItemNotFoundException("Lecturer '" + lecName + "' not found");
+        }
+        comm.removeLecFromMembers(lec);
     }
 
-    public void addLecToCommittee(String commName, String lecName) {
+    public void addLecToCommittee(String commName, String lecName) throws ItemNotFoundException, LecturerAlreadyInCommitteeException {
         Committee comm = getCommitteeByName(commName);
         Lecturer lec = getLecturerByName(lecName);
+        if (comm == null) {
+            throw new ItemNotFoundException("Committee '" + commName + "' not found");
+        }
+        if (lec == null) {
+            throw new ItemNotFoundException("Lecturer '" + lecName + "' not found");
+        }
         comm.addLecturer(lec);
     }
-  
+
+    public Committee duplicateCommittee(String commName) throws ItemNotFoundException, ItemAlreadyExistsException, LecturerAlreadyInCommitteeException {
+        Committee original = getCommitteeByName(commName);
+        if (original == null) {
+            throw new ItemNotFoundException("Committee '" + commName + "' not found");
+        }
+
+        String newName = commName + "-new";
+        if (getCommitteeByName(newName) != null) {
+            throw new ItemAlreadyExistsException("Committee '" + newName + "' already exists");
+        }
+        Committee duplicate = new Committee(newName, original.getChairman());
+
+        Lecturer[] members = original.getLecturersInCommittee();
+        for (Lecturer member : members) {
+            if (member != null) {
+                duplicate.addLecturer(member);
+            }
+        }
+        comMan.addExistingCommittee(duplicate);
+
+        return duplicate;
+    }
+
     ///                  ///
     ///     Department   ///
     ///                  ///
@@ -85,19 +118,33 @@ public class Manager {
         return deptMan.getDepartments();
     }
 
-    public double getAverageSalaryByDepartment(String depName) {
+    public double getAverageSalaryByDepartment(String depName) throws ItemNotFoundException {
         Department dep = deptMan.getDepartByName(depName);
+        if (dep == null) {
+            throw new ItemNotFoundException("Department '" + depName + "' not found");
+        }
         Lecturer[] lecs = dep.getLecturers();
         return getAverageSalary(lecs);
     }
 
-    public void addDepartment(String name, int students) {
+    public void addDepartment(String name, int students) throws ItemAlreadyExistsException {
+        Department existing = deptMan.getDepartByName(name);
+        if (existing != null) {
+            throw new ItemAlreadyExistsException("Department '" + name + "' already exists");
+        }
         deptMan.addDepartment(name, students);
     }
 
-    public void addLecToDept(String lecName, String deptName) {
+    public void addLecToDept(String lecName, String deptName) throws ItemNotFoundException {
         Department dept = deptMan.getDepartByName(deptName);
         Lecturer lec = getLecturerByName(lecName);
+
+        if (dept == null) {
+            throw new ItemNotFoundException("Department '" + deptName + "' not found");
+        }
+        if (lec == null) {
+            throw new ItemNotFoundException("Lecturer '" + lecName + "' not found");
+        }
 
         Department oldDept = lec.getDepartment();
         if (oldDept != null) {

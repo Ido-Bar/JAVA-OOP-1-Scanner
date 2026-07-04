@@ -14,9 +14,6 @@ public class Department {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public int getNumStudents() { return numStudents; }
-    public void setNumStudents(int numStudents) { this.numStudents = numStudents; }
-
     public void addLecturer(Lecturer lec) {
         lecMan.addLecturer(lec);
 
@@ -29,6 +26,14 @@ public class Department {
 
     public Lecturer[] getLecturers() {
         return lecMan.getLecturers();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Department)) return false;
+        Department dep = (Department) o;
+        return name.equals(dep.name);
     }
 
     @Override
