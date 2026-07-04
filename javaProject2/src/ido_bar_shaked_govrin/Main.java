@@ -28,6 +28,9 @@ public class Main {
             System.out.println("9: View Average Salary of All Lecturers In Chosen Deptartments.");
             System.out.println("10: View All Lecturers Details.");
             System.out.println("11: View All Committees Details.");
+            System.out.println("12: Compare Dr/Professors by Number of Articles.");
+            System.out.println("13: Compare Committees.");
+            System.out.println("14: Duplicate Committee.");
             System.out.print("Please choose your next action out of the preceding actions: ");
 
             choice = scanner.nextInt();
@@ -69,6 +72,15 @@ public class Main {
                 case 11:
                     displayCommittee(man);
                     break;
+                case 12:
+                    compareDrProfMenu(man, scanner);
+                    break;
+                case 13:
+                    compareCommitteesMenu(man, scanner);
+                    break;
+                case 14:
+                    duplicateCommitteeMenu(man, scanner);
+                    break;
             }
         } while (choice != 0);
         System.out.println("Yallah bye");
@@ -85,15 +97,13 @@ public class Main {
         String degreeName;
         double salary;
 
-        Lecturer[] lecs = man.getLecturers();
         System.out.print("Provide Lecturer name: ");
         name = scanner.nextLine();
-        boolean nameExist = getIsLecturerExists(name, lecs);
 
-        while (nameExist){
+        // Check if lecturer already exists
+        while (man.getLecturerByName(name) != null) {
             System.out.print("Lecturer Exists, Provide a Lecturer name: ");
             name = scanner.nextLine();
-            nameExist = getIsLecturerExists(name, lecs);
         }
 
         System.out.print("Provide Lecturer ID (Teudat Zehut): ");
@@ -107,14 +117,14 @@ public class Main {
             i++;
         }
 
-        int choice = scanner.nextInt();
-        boolean isValid = (choice >= 0 && choice < degrees.length);
+        int degreeChoice = scanner.nextInt();
+        boolean isValid = (degreeChoice >= 0 && degreeChoice < degrees.length);
         while(!isValid) {
             System.out.println("Invalid input!");
-            choice = scanner.nextInt();
-            isValid = (choice >= 0 && choice < degrees.length);
+            degreeChoice = scanner.nextInt();
+            isValid = (degreeChoice >= 0 && degreeChoice < degrees.length);
         }
-        degreeRank = degrees[choice];
+        degreeRank = degrees[degreeChoice];
 
         scanner.nextLine();
 
@@ -123,21 +133,48 @@ public class Main {
 
         System.out.print("Provide Lecturer Salary: ");
         salary = scanner.nextDouble();
+        scanner.nextLine();
 
-        man.addLecturer(name, id, degreeRank, degreeName, salary);
-        System.out.println("Lecturer '" + name + "' added successfully!");
-    }
+        // If DR or PROF, ask for articles
+        if (degreeRank == Lecturer.Degree.DR || degreeRank == Lecturer.Degree.PROF) {
+            System.out.print("How many articles does this lecturer have? ");
+            int numArticles = scanner.nextInt();
+            scanner.nextLine();
 
-    private static boolean getIsLecturerExists(String name, Lecturer[] lecs) {
-        boolean nameExist = false;
-        for (Lecturer lec : lecs) {
-            if (lec.getName().equals(name)) {
-                nameExist = true;
-                break;
+            String[] articles = new String[numArticles];
+            for (int j = 0; j < numArticles; j++) {
+                System.out.print("Enter article " + (j + 1) + " name: ");
+                articles[j] = scanner.nextLine();
+            }
+
+            if (degreeRank == Lecturer.Degree.PROF) {
+                System.out.print("Provide Professorship Body name: ");
+                String professorshipBody = scanner.nextLine();
+                Prof prof = new Prof(name, id, degreeRank, degreeName, salary, articles, professorshipBody);
+                try {
+                    man.addLecturer(prof);
+                    System.out.println("Professor '" + name + "' added successfully!");
+                } catch (ItemAlreadyExistsException e) {
+                    System.out.println(e.getMessage());
+                }
+            } else {
+                Dr dr = new Dr(name, id, degreeRank, degreeName, salary, articles);
+                try {
+                    man.addLecturer(dr);
+                    System.out.println("Dr '" + name + "' added successfully!");
+                } catch (ItemAlreadyExistsException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        } else {
+            Lecturer lec = new Lecturer(name, id, degreeRank, degreeName, salary);
+            try {
+                man.addLecturer(lec);
+                System.out.println("Lecturer '" + name + "' added successfully!");
+            } catch (ItemAlreadyExistsException e) {
+                System.out.println(e.getMessage());
             }
         }
-
-        return nameExist;
     }
 
     private static void displayLecturers(Manager man){
@@ -157,87 +194,48 @@ public class Main {
     ///     COMMITTEE    ///
     ///                  ///
     private static void addLecturerToCommitteeMenu(Manager man, Scanner scanner){
-        String[] inputs = getCommLecInputs(man, scanner);
-        String commName = inputs[0];
-        String lecName = inputs[1];
-
-//         Check if lecturer is a chairman
-        Committee comm = man.getCommitteeByName(commName);
-        Lecturer chairman = comm.getChairman();
-        boolean isChairman = chairman.getName().equals(lecName);
-        while (isChairman){
-            System.out.print("Lecturer is a Chairman, Provide a non Chairman Lecturer name: ");
-            lecName = scanner.nextLine();
-            isChairman = chairman.getName().equals(lecName);
-        }
-
-
-        man.addLecToCommittee(commName, lecName);
-        System.out.println("Lecturer '" + lecName + "' added successfully to Committe " + commName + "!");
-    }
-
-    private static void addCommitteeMenu(Manager man, Scanner scanner) {
-        String[] inputs = getCommChairmanInputs(man, scanner, false);
-        String name = inputs[0];
-        String chairmanName = inputs[1];
-        Lecturer chairman = man.getLecturerByName(chairmanName);
-
-        man.addCommittee(name, chairman);
-        System.out.println("Committee '" + name + "' added successfully with Chairman " + chairman.getName() + "!");
-    }
-
-    private static String[] getCommLecInputs(Manager man, Scanner scanner){
         System.out.print("Provide Committee Name: ");
         String commName = scanner.nextLine();
 
-        Committee[] comms = man.getCommittees();
-        boolean commNameExist = commExist(commName, comms);
-        while (!commNameExist) {
-            System.out.print("Committee Does not Exists, Provide an existing Committee name: ");
+        Committee comm = man.getCommitteeByName(commName);
+        while (comm == null) {
+            System.out.print("Committee Does not Exist, Provide an existing Committee name: ");
             commName = scanner.nextLine();
-            commNameExist = commExist(commName, comms);
+            comm = man.getCommitteeByName(commName);
         }
 
         System.out.print("Provide Lecturer Name: ");
         String lecName = scanner.nextLine();
 
-        Lecturer[] lecs = man.getLecturers();
-        boolean lecNameExist = getIsLecturerExists(lecName, lecs);
-        while (!lecNameExist){
-            System.out.print("Lecturer Does not Exists, Provide an existing Lecturer name: ");
+        Lecturer lec = man.getLecturerByName(lecName);
+        while (lec == null) {
+            System.out.print("Lecturer Does not Exist, Provide an existing Lecturer name: ");
             lecName = scanner.nextLine();
-            lecNameExist = getIsLecturerExists(lecName, lecs);
+            lec = man.getLecturerByName(lecName);
         }
 
-        Committee comm = man.getCommitteeByName(commName);
-        lecs = comm.getLecturersInCommittee();
-        lecNameExist = getIsLecturerExists(lecName, lecs);
-        while (lecNameExist){
-            System.out.print("Lecturer Exists in Committee, Provide non existing Lecturer in Committee name: ");
-            lecName = scanner.nextLine();
-            lecNameExist = getIsLecturerExists(lecName, lecs);
+        try {
+            man.addLecToCommittee(commName, lecName);
+            System.out.println("Lecturer '" + lecName + "' added successfully to Committee " + commName + "!");
+        } catch (ItemNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (LecturerAlreadyInCommitteeException e) {
+            System.out.println(e.getMessage());
         }
-
-        return new String[]{commName, lecName};
     }
 
-    private static String[] getCommChairmanInputs(Manager man, Scanner scanner, boolean exist){
-        String name;
-        String chairmanName;
-
+    private static void addCommitteeMenu(Manager man, Scanner scanner) {
         System.out.print("Provide Committee Name: ");
-        name = scanner.nextLine();
-        Committee[] comms = man.getCommittees();
+        String name = scanner.nextLine();
 
-        boolean nameExist = commExist(name, comms);
-        while (exist != nameExist) {
-            if (exist) System.out.print("Committee Does not Exist, Provide an existing Committee name: ");
-            else System.out.print("Committee Exists, Provide a new Committee name: ");
+        // Check if committee already exists
+        while (man.getCommitteeByName(name) != null) {
+            System.out.print("Committee Exists, Provide a new Committee name: ");
             name = scanner.nextLine();
-            nameExist = commExist(name, comms);
         }
+
         System.out.print("Provide Lecturer Chairman name: ");
-        chairmanName = scanner.nextLine();
+        String chairmanName = scanner.nextLine();
 
         Lecturer chairman = man.getLecturerByName(chairmanName);
         while (chairman == null) {
@@ -246,8 +244,8 @@ public class Main {
             chairman = man.getLecturerByName(chairmanName);
         }
 
-        boolean isDegreeOk = chairman.getDegreeRank().ordinal() >= Lecturer.Degree.DR.ordinal();
-        while (!isDegreeOk) {
+        // Chairman must be at least DR
+        while (!(chairman instanceof Dr)) {
             System.out.print("Chairman must be at least DR. Provide a different Chairman name: ");
             chairmanName = scanner.nextLine();
             chairman = man.getLecturerByName(chairmanName);
@@ -257,39 +255,87 @@ public class Main {
                 chairmanName = scanner.nextLine();
                 chairman = man.getLecturerByName(chairmanName);
             }
-            isDegreeOk = chairman.getDegreeRank().ordinal() >= Lecturer.Degree.DR.ordinal();
         }
-        return new String[]{name, chairmanName};
-    }
 
-    private static boolean commExist(String name,Committee[] comms) {
-        boolean nameExist = false;
-        for (Committee comm : comms) {
-            if (comm.getName().equals(name)) {
-                nameExist = true;
-                break;
-            }
+        try {
+            man.addCommittee(name, (Dr) chairman);
+            System.out.println("Committee '" + name + "' added successfully with Chairman " + chairman.getName() + "!");
+        } catch (InvalidChairmanException e) {
+            System.out.println(e.getMessage());
+        } catch (ItemAlreadyExistsException e) {
+            System.out.println(e.getMessage());
         }
-        return nameExist;
     }
 
     private static void changeCommitteeChairmanMenu(Manager man, Scanner scanner){
-        String[] inputs = getCommChairmanInputs(man, scanner, true);
-        String commName = inputs[0];
-        Committee comm = man.getCommitteeByName(commName);
-        String chairmanName = inputs[1];
-        Lecturer chairman = man.getLecturerByName(chairmanName);
+        System.out.print("Provide Committee Name: ");
+        String commName = scanner.nextLine();
 
-        man.updateCommitteeChairman(comm, chairman);
+        Committee comm = man.getCommitteeByName(commName);
+        while (comm == null) {
+            System.out.print("Committee Does not Exist, Provide an existing Committee name: ");
+            commName = scanner.nextLine();
+            comm = man.getCommitteeByName(commName);
+        }
+
+        System.out.print("Provide Lecturer Chairman name: ");
+        String chairmanName = scanner.nextLine();
+
+        Lecturer chairman = man.getLecturerByName(chairmanName);
+        while (chairman == null) {
+            System.out.print("Lecturer Doesn't Exist, Provide a valid Lecturer name: ");
+            chairmanName = scanner.nextLine();
+            chairman = man.getLecturerByName(chairmanName);
+        }
+
+        // Chairman must be at least DR (type-checked via instanceof)
+        while (!(chairman instanceof Dr)) {
+            System.out.print("Chairman must be at least DR. Provide a different Chairman name: ");
+            chairmanName = scanner.nextLine();
+            chairman = man.getLecturerByName(chairmanName);
+
+            while (chairman == null) {
+                System.out.print("Lecturer Doesn't Exist, Provide a valid Lecturer name: ");
+                chairmanName = scanner.nextLine();
+                chairman = man.getLecturerByName(chairmanName);
+            }
+        }
+
+        try {
+            man.updateCommitteeChairman(comm, (Dr) chairman);
+            System.out.println("Chairman of Committee '" + commName + "' updated to " + chairmanName + "!");
+        } catch (InvalidChairmanException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private static void removeLecturerFromCommitteeMenu(Manager man, Scanner scanner) {
-        String[] inputs = getCommLecInputs(man, scanner);
-        String commName = inputs[0];
-        String lecName = inputs[1];
+        System.out.print("Provide Committee Name: ");
+        String commName = scanner.nextLine();
 
-        man.removeLecFromCommittee(commName, lecName);
-        System.out.println("Lecturer '" + lecName + "' removed successfully from Committee "+ commName + "!");
+        Committee comm = man.getCommitteeByName(commName);
+        while (comm == null) {
+            System.out.print("Committee Does not Exist, Provide an existing Committee name: ");
+            commName = scanner.nextLine();
+            comm = man.getCommitteeByName(commName);
+        }
+
+        System.out.print("Provide Lecturer Name: ");
+        String lecName = scanner.nextLine();
+
+        Lecturer lec = man.getLecturerByName(lecName);
+        while (lec == null) {
+            System.out.print("Lecturer Does not Exist, Provide an existing Lecturer name: ");
+            lecName = scanner.nextLine();
+            lec = man.getLecturerByName(lecName);
+        }
+
+        try {
+            man.removeLecFromCommittee(commName, lecName);
+            System.out.println("Lecturer '" + lecName + "' removed successfully from Committee " + commName + "!");
+        } catch (ItemNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private static void displayCommittee(Manager man){
@@ -299,18 +345,154 @@ public class Main {
         }
     }
 
+    ///                          ///
+    ///     COMPARE DR/PROF      ///
+    ///                          ///
+    private static void compareDrProfMenu(Manager man, Scanner scanner) {
+        System.out.print("Provide first Dr/Professor name: ");
+        String name1 = scanner.nextLine();
+        Lecturer lec1 = man.getLecturerByName(name1);
+        while (lec1 == null || !(lec1 instanceof Dr)) {
+            if (lec1 == null) {
+                System.out.print("Lecturer Does not Exist, Provide a valid Dr/Professor name: ");
+            } else {
+                System.out.print("Lecturer is not a Dr/Professor, Provide a valid Dr/Professor name: ");
+            }
+            name1 = scanner.nextLine();
+            lec1 = man.getLecturerByName(name1);
+        }
+
+        System.out.print("Provide second Dr/Professor name: ");
+        String name2 = scanner.nextLine();
+        Lecturer lec2 = man.getLecturerByName(name2);
+        while (lec2 == null || !(lec2 instanceof Dr)) {
+            if (lec2 == null) {
+                System.out.print("Lecturer Does not Exist, Provide a valid Dr/Professor name: ");
+            } else {
+                System.out.print("Lecturer is not a Dr/Professor, Provide a valid Dr/Professor name: ");
+            }
+            name2 = scanner.nextLine();
+            lec2 = man.getLecturerByName(name2);
+        }
+
+        Dr dr1 = (Dr) lec1;
+        Dr dr2 = (Dr) lec2;
+        int result = dr1.compareTo(dr2);
+
+        System.out.println(dr1.getName() + " has " + dr1.getArticlesCount() + " articles.");
+        System.out.println(dr2.getName() + " has " + dr2.getArticlesCount() + " articles.");
+
+        if (result > 0) {
+            System.out.println(dr1.getName() + " has more articles than " + dr2.getName() + ".");
+        } else if (result < 0) {
+            System.out.println(dr2.getName() + " has more articles than " + dr1.getName() + ".");
+        } else {
+            System.out.println("Both have the same number of articles.");
+        }
+    }
+
+    ///                              ///
+    ///     COMPARE COMMITTEES       ///
+    ///                              ///
+    private static void compareCommitteesMenu(Manager man, Scanner scanner) {
+        System.out.println("Compare Committees by:");
+        System.out.println("1: Number of members");
+        System.out.println("2: Total number of articles");
+        System.out.print("Choose: ");
+        int subChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        while (subChoice != 1 && subChoice != 2) {
+            System.out.print("Invalid choice. Choose 1 or 2: ");
+            subChoice = scanner.nextInt();
+            scanner.nextLine();
+        }
+
+        System.out.print("Provide first Committee name: ");
+        String commName1 = scanner.nextLine();
+        Committee comm1 = man.getCommitteeByName(commName1);
+        while (comm1 == null) {
+            System.out.print("Committee Does not Exist, Provide an existing Committee name: ");
+            commName1 = scanner.nextLine();
+            comm1 = man.getCommitteeByName(commName1);
+        }
+
+        System.out.print("Provide second Committee name: ");
+        String commName2 = scanner.nextLine();
+        Committee comm2 = man.getCommitteeByName(commName2);
+        while (comm2 == null) {
+            System.out.print("Committee Does not Exist, Provide an existing Committee name: ");
+            commName2 = scanner.nextLine();
+            comm2 = man.getCommitteeByName(commName2);
+        }
+
+        if (subChoice == 1) {
+            // Compare by number of members (Comparable)
+            int result = comm1.compareTo(comm2);
+            System.out.println(comm1.getName() + " has " + comm1.getMemberCount() + " members.");
+            System.out.println(comm2.getName() + " has " + comm2.getMemberCount() + " members.");
+
+            if (result > 0) {
+                System.out.println(comm1.getName() + " has more members than " + comm2.getName() + ".");
+            } else if (result < 0) {
+                System.out.println(comm2.getName() + " has more members than " + comm1.getName() + ".");
+            } else {
+                System.out.println("Both committees have the same number of members.");
+            }
+        } else {
+            // Compare by total articles (Comparator)
+            Committee.ArticleComparator comparator = new Committee.ArticleComparator();
+            int result = comparator.compare(comm1, comm2);
+            System.out.println(comm1.getName() + " has " + comm1.getTotalArticles() + " total articles.");
+            System.out.println(comm2.getName() + " has " + comm2.getTotalArticles() + " total articles.");
+
+            if (result > 0) {
+                System.out.println(comm1.getName() + " has more total articles than " + comm2.getName() + ".");
+            } else if (result < 0) {
+                System.out.println(comm2.getName() + " has more total articles than " + comm1.getName() + ".");
+            } else {
+                System.out.println("Both committees have the same total number of articles.");
+            }
+        }
+    }
+
+    ///                              ///
+    ///     DUPLICATE COMMITTEE      ///
+    ///                              ///
+    private static void duplicateCommitteeMenu(Manager man, Scanner scanner) {
+        System.out.print("Provide Committee Name to duplicate: ");
+        String commName = scanner.nextLine();
+
+        Committee comm = man.getCommitteeByName(commName);
+        while (comm == null) {
+            System.out.print("Committee Does not Exist, Provide an existing Committee name: ");
+            commName = scanner.nextLine();
+            comm = man.getCommitteeByName(commName);
+        }
+
+        try {
+            Committee duplicate = man.duplicateCommittee(commName);
+            System.out.println("Committee '" + commName + "' duplicated successfully as '" + duplicate.getName() + "'!");
+        } catch (ItemNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (ItemAlreadyExistsException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     ///                  ///
     ///     Department   ///
     ///                  ///
     private static void addDepartmentMenu(Manager man, Scanner scanner) {
         String name;
         int numOfStudents;
-        Department[] depts = man.getDepartments();
 
         System.out.print("Provide Department's Name: ");
         name = scanner.nextLine();
-        boolean isDepExists = getIsDepExists(name, depts);
 
+        // Check if department already exists
+        Department[] depts = man.getDepartments();
+        boolean isDepExists = getIsDepExists(name, depts);
         while (isDepExists) {
             System.out.print("Department Exists, Provide a Valid Department Name: ");
             name = scanner.nextLine();
@@ -319,40 +501,48 @@ public class Main {
 
         System.out.print("Provide Number Of Students In Department: ");
         numOfStudents = scanner.nextInt();
+        scanner.nextLine();
 
-        man.addDepartment(name, numOfStudents);
-        System.out.println("Department '" + name + "' added successfully!");
-
+        try {
+            man.addDepartment(name, numOfStudents);
+            System.out.println("Department '" + name + "' added successfully!");
+        } catch (ItemAlreadyExistsException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private static void addLecToDepMenu(Manager man, Scanner scanner) {
         String lecName;
         String deptName;
-        Lecturer[] lecs = man.getLecturers();
-        Department[] depts = man.getDepartments();
-
 
         System.out.print("Provide Department name: ");
         deptName = scanner.nextLine();
+        Department[] depts = man.getDepartments();
         boolean isDeptExists = getIsDepExists(deptName, depts);
 
         while (!isDeptExists) {
-            System.out.print("Department Does Not Exists, Please Provide a Valid Department Name: ");
+            System.out.print("Department Does Not Exist, Please Provide a Valid Department Name: ");
             deptName = scanner.nextLine();
             isDeptExists = getIsDepExists(deptName, depts);
         }
 
         System.out.print("Provide Lecturer name: ");
         lecName = scanner.nextLine();
+        Lecturer[] lecs = man.getLecturers();
         boolean isLecExists = getIsLecturerExists(lecName, lecs);
 
         while (!isLecExists) {
-            System.out.print("Lecturer Does Not Exists, Please Provide a Valid Lecturer Name: ");
+            System.out.print("Lecturer Does Not Exist, Please Provide a Valid Lecturer Name: ");
             lecName = scanner.nextLine();
             isLecExists = getIsLecturerExists(lecName, lecs);
         }
 
-        man.addLecToDept(lecName, deptName);
+        try {
+            man.addLecToDept(lecName, deptName);
+            System.out.println("Lecturer '" + lecName + "' assigned to Department '" + deptName + "'!");
+        } catch (ItemNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private static boolean getIsDepExists(String name, Department[] depts) {
@@ -368,6 +558,17 @@ public class Main {
         return isNameExists;
     }
 
+    private static boolean getIsLecturerExists(String name, Lecturer[] lecs) {
+        boolean nameExist = false;
+        for (Lecturer lec : lecs) {
+            if (lec.getName().equals(name)) {
+                nameExist = true;
+                break;
+            }
+        }
+        return nameExist;
+    }
+
     private static void displayAvgSalaryInDepartment(Manager man, Scanner scanner){
         String name;
         Department[] depts = man.getDepartments();
@@ -377,12 +578,16 @@ public class Main {
         boolean isDepExists = getIsDepExists(name, depts);
 
         while (!isDepExists) {
-            System.out.print("Department Does Note Exists, Provide an Existing Department Name: ");
+            System.out.print("Department Does Not Exist, Provide an Existing Department Name: ");
             name = scanner.nextLine();
             isDepExists = getIsDepExists(name, depts);
         }
-        double avg = man.getAverageSalaryByDepartment(name);
-        System.out.println("The Average Salary In Department " + name + " is: " + avg);
+        try {
+            double avg = man.getAverageSalaryByDepartment(name);
+            System.out.println("The Average Salary In Department " + name + " is: " + avg);
+        } catch (ItemNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }
